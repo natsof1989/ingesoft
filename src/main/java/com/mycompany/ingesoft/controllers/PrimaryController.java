@@ -229,7 +229,7 @@ public class PrimaryController implements Initializable {
 
         // Tipo de Recurso
         if (recurso.getIdTipoRecurso() != null && !recurso.getNombreTipoRecurso().trim().isEmpty()) {
-            Label lblTipoRecurso = new Label(recurso.getTipoRecurso());
+            Label lblTipoRecurso = new Label(recurso.getNombreTipoRecurso());
             lblTipoRecurso.getStyleClass().add("server-badge");
             card.getChildren().add(lblTipoRecurso);
         }
