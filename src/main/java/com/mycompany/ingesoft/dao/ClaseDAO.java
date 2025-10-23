@@ -1,0 +1,293 @@
+package com.mycompany.ingesoft.dao;
+
+import com.mycompany.ingesoft.models.Empresa;
+import com.mycompany.ingesoft.models.Sucursal;
+import com.mycompany.ingesoft.models.TipoRecurso;
+import com.mycompany.ingesoft.models.Recurso;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ClaseDAO {
+    private final Connection conexion;
+
+    public ClaseDAO(Connection conexion) {
+        this.conexion = conexion;
+    }
+
+    // ================== EMPRESAS ==================
+    public List<Empresa> obtenerEmpresas() throws SQLException {
+        List<Empresa> empresas = new ArrayList<>();
+        String sql = "SELECT * FROM empresa ORDER BY descripcion";
+        try (PreparedStatement ps = conexion.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Empresa emp = new Empresa();
+                emp.setIdEmpresa(rs.getInt("id_empresa"));
+                emp.setDescripcion(rs.getString("descripcion"));
+                empresas.add(emp);
+            }
+        }
+        return empresas;
+    }
+
+    public boolean insertarEmpresa(Empresa empresa) throws SQLException {
+        String sql = "INSERT INTO empresa (descripcion) VALUES (?)";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, empresa.getDescripcion());
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    // ================== SUCURSALES ==================
+    public List<Sucursal> obtenerSucursalesPorEmpresa(int idEmpresa) throws SQLException {
+        List<Sucursal> sucursales = new ArrayList<>();
+        String sql = "SELECT * FROM sucursales WHERE id_empresa = ? ORDER BY descripcion";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idEmpresa);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Sucursal suc = new Sucursal();
+                    suc.setIdSucursal(rs.getInt("id_sucursal"));
+                    suc.setIdEmpresa(rs.getInt("id_empresa"));
+                    suc.setDescripcion(rs.getString("descripcion"));
+                    suc.setDireccion(rs.getString("direccion"));
+                    suc.setTelefono(rs.getString("telefono"));
+                    sucursales.add(suc);
+                }
+            }
+        }
+        return sucursales;
+    }
+
+    public boolean insertarSucursal(Sucursal sucursal) throws SQLException {
+        String sql = "INSERT INTO sucursales (id_empresa, descripcion, direccion, telefono) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, sucursal.getIdEmpresa());
+            ps.setString(2, sucursal.getDescripcion());
+            ps.setString(3, sucursal.getDireccion());
+            ps.setString(4, sucursal.getTelefono());
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    // ================== TIPOS DE RECURSO ==================
+    public List<TipoRecurso> obtenerTiposDeRecurso() throws SQLException {
+        List<TipoRecurso> tipos = new ArrayList<>();
+        String sql = "SELECT * FROM tipo_recurso ORDER BY descripcion";
+        try (PreparedStatement ps = conexion.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                TipoRecurso tipo = new TipoRecurso();
+                tipo.setIdTipoRecurso(rs.getInt("id_tipo_recurso"));
+                tipo.setDescripcion(rs.getString("descripcion"));
+                tipos.add(tipo);
+            }
+        }
+        return tipos;
+    }
+
+    public boolean insertarTipoRecurso(TipoRecurso tipo) throws SQLException {
+        String sql = "INSERT INTO tipo_recurso (descripcion) VALUES (?)";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, tipo.getDescripcion());
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    // ================== RECURSOS ==================
+    public List<Recurso> obtenerRecursos() throws SQLException {
+        List<Recurso> recursos = new ArrayList<>();
+        String sql = """
+            SELECT r.*, e.descripcion AS empresa_desc, 
+                   s.descripcion AS sucursal_desc, 
+                   t.descripcion AS tipo_desc
+            FROM recurso r
+            JOIN empresa e ON r.id_empresa = e.id_empresa
+            LEFT JOIN sucursales s ON r.id_sucursal = s.id_sucursal
+            JOIN tipo_recurso t ON r.id_tipo_recurso = t.id_tipo_recurso
+            ORDER BY e.descripcion, s.descripcion
+        """;
+        try (PreparedStatement ps = conexion.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                recursos.add(mapRecurso(rs));
+            }
+        }
+        return recursos;
+    }
+
+    public boolean insertarRecurso(Recurso recurso) throws SQLException {
+        String sql = "INSERT INTO recurso (titulo, usuario, contrasena, ip, nota, id_empresa, id_sucursal, id_tipo_recurso, inicio_sesion, anydesk) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+
+            // Campos obligatorios
+            ps.setString(1, recurso.getTitulo());
+
+            // Campos opcionales
+            if (esVacio(recurso.getUsuario())) {
+                ps.setNull(2, java.sql.Types.VARCHAR);
+            } else {
+                ps.setString(2, recurso.getUsuario());
+            }
+
+            if (esVacio(recurso.getContrasena())) {
+                ps.setNull(3, java.sql.Types.VARCHAR);
+            } else {
+                ps.setString(3, recurso.getContrasena());
+            }
+
+            if (esVacio(recurso.getIp())) {
+                ps.setNull(4, java.sql.Types.VARCHAR);
+            } else {
+                ps.setString(4, recurso.getIp());
+            }
+
+            if (esVacio(recurso.getNota())) {
+                ps.setNull(5, java.sql.Types.VARCHAR);
+            } else {
+                ps.setString(5, recurso.getNota());
+            }
+
+            // Empresa (obligatoria)
+            ps.setInt(6, recurso.getIdEmpresa());
+
+            // Sucursal opcional
+            if (recurso.getIdSucursal() == null) {
+                ps.setNull(7, java.sql.Types.INTEGER);
+            } else {
+                ps.setInt(7, recurso.getIdSucursal());
+            }
+
+            // Tipo recurso obligatorio
+            ps.setInt(8, recurso.getIdTipoRecurso());
+
+            // inicio_sesion: booleano
+            ps.setBoolean(9, recurso.isInicioSesion());
+
+            // anydesk (puede ser nulo si no se usa)
+            if (esVacio(recurso.getAnydesk())) {
+                ps.setNull(10, java.sql.Types.VARCHAR);
+            } else {
+                ps.setString(10, recurso.getAnydesk());
+            }
+
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+// Método auxiliar
+private boolean esVacio(String valor) {
+    return valor == null || valor.trim().isEmpty();
+}
+
+
+    // ================== NUEVOS MÉTODOS (para el controller) ==================
+
+    public List<Recurso> obtenerRecursosPorSucursal(int idSucursal) throws SQLException {
+        String sql = """
+            SELECT r.*, e.descripcion AS empresa_desc, s.descripcion AS sucursal_desc, t.descripcion AS tipo_desc
+            FROM recursos r
+            JOIN empresas e ON r.id_empresa = e.id_empresa
+            JOIN sucursales s ON r.id_sucursal = s.id_sucursal
+            JOIN tipo_recurso t ON r.id_tipo_recurso = t.id_tipo_recurso
+            WHERE r.id_sucursal = ?
+        """;
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idSucursal);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Recurso> lista = new ArrayList<>();
+                while (rs.next()) lista.add(mapRecurso(rs));
+                return lista;
+            }
+        }
+    }
+
+    public List<Recurso> obtenerRecursosPorEmpresa(int idEmpresa) throws SQLException {
+        String sql = """
+            SELECT r.*, e.descripcion AS empresa_desc, s.descripcion AS sucursal_desc, t.descripcion AS tipo_desc
+            FROM recursos r
+            JOIN empresas e ON r.id_empresa = e.id_empresa
+            LEFT JOIN sucursales s ON r.id_sucursal = s.id_sucursal
+            JOIN tipo_recurso t ON r.id_tipo_recurso = t.id_tipo_recurso
+            WHERE r.id_empresa = ?
+        """;
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idEmpresa);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Recurso> lista = new ArrayList<>();
+                while (rs.next()) lista.add(mapRecurso(rs));
+                return lista;
+            }
+        }
+    }
+
+    public List<Recurso> extraerNotasTodas() throws SQLException {
+        return obtenerRecursos(); // simplemente reutiliza el método principal
+    }
+
+    public List<Recurso> buscarRecursos(String filtro) throws SQLException {
+        String sql = """
+            SELECT r.*, e.descripcion AS empresa_desc, s.descripcion AS sucursal_desc, t.descripcion AS tipo_desc
+            FROM recurso r
+            JOIN empresa e ON r.id_empresa = e.id_empresa
+            LEFT JOIN sucursales s ON r.id_sucursal = s.id_sucursal
+            JOIN tipo_recurso t ON r.id_tipo_recurso = t.id_tipo_recurso
+            WHERE r.titulo LIKE ? OR r.usuario LIKE ? OR e.descripcion LIKE ? OR s.descripcion LIKE ?
+        """;
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            String f = "%" + filtro + "%";
+            ps.setString(1, f);
+            ps.setString(2, f);
+            ps.setString(3, f);
+            ps.setString(4, f);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Recurso> lista = new ArrayList<>();
+                while (rs.next()) lista.add(mapRecurso(rs));
+                return lista;
+            }
+        }
+    }
+
+    // ================== MÉTODO AUXILIAR ==================
+    private Recurso mapRecurso(ResultSet rs) throws SQLException {
+        Recurso r = new Recurso();
+        r.setIdRecurso(rs.getInt("id_recurso"));
+        r.setIdEmpresa(rs.getInt("id_empresa"));
+        r.setIdSucursal((Integer) rs.getObject("id_sucursal"));
+        r.setIdTipoRecurso(rs.getInt("id_tipo_recurso"));
+        r.setTitulo(rs.getString("titulo"));
+        r.setUsuario(rs.getString("usuario"));
+        r.setContrasena(rs.getString("contrasena"));
+        r.setIp(rs.getString("ip"));
+        r.setNota(rs.getString("nota"));
+        r.setInicioSesion(rs.getBoolean("inicio_sesion"));
+        r.setAnydesk(rs.getString("anydesk"));
+        r.setNombreEmpresa(rs.getString("empresa_desc"));
+        r.setNombreSucursal(rs.getString("sucursal_desc"));
+        r.setNombreTipo(rs.getString("tipo_desc"));
+        return r;
+    }
+    
+        public List<Recurso> obtenerRecursosPorTipo(int idTipoRecurso) throws SQLException {
+        String sql = """
+            SELECT r.*, e.descripcion AS empresa_desc, s.descripcion AS sucursal_desc, t.descripcion AS tipo_desc
+            FROM recursos r
+            JOIN empresas e ON r.id_empresa = e.id_empresa
+            LEFT JOIN sucursales s ON r.id_sucursal = s.id_sucursal
+            JOIN tipo_recurso t ON r.id_tipo_recurso = t.id_tipo_recurso
+            WHERE r.id_tipo_recurso = ?
+        """;
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idTipoRecurso);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Recurso> lista = new ArrayList<>();
+                while (rs.next()) lista.add(mapRecurso(rs));
+                return lista;
+            }
+        }
+    }
+
+}

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="1224.0" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.ingesoft.controllers.PrimaryController">
+   <top>
+      <VBox prefHeight="226.0" prefWidth="880.0" styleClass="vbox" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="75.0" fitWidth="345.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/ingesoft-logo.png" />
+               </image>
+            </ImageView>
+            <Label alignment="TOP_LEFT" styleClass="section-title" text="Gestor de accesos " />
+            <Label styleClass="server-badge" text="Gestiona tus credenciales de acceso remoto" />
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <padding>
+                  <Insets right="30.0" />
+               </padding>
+               <children>
+                  <SplitMenuButton mnemonicParsing="false" text="➕ Agregar">
+                    <items>
+                      <MenuItem fx:id="btn_nuevaNota" mnemonicParsing="false" onAction="#nuevaNota" text="Nueva nota" />
+                      <MenuItem fx:id="btn_nuevaEmpresa" mnemonicParsing="false" onAction="#nuevaEmpresa" text="Nueva empresa" />
+                        <MenuItem fx:id="btn_nuevaSucursal" mnemonicParsing="false" onAction="#nuevaSucursal" text="Nueva sucursal" />
+                        <MenuItem fx:id="btn_nuevoRecurso" mnemonicParsing="false" onAction="#nuevoRecurso" text="Nuevo tipo recurso" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="btn_gestionarEmpresas" mnemonicParsing="false" onAction="#gestionarEmpresas" text="Gestionar empresas" />
+                        <MenuItem fx:id="btn_gestionarSucursales" mnemonicParsing="false" onAction="#gestionarSucursales" text="Gestionar sucursales" />
+                    </items>
+                  </SplitMenuButton>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <TextField fx:id="txt_buscar" prefHeight="26.0" prefWidth="380.0" promptText="🔎 Buscar por título, empresa, sucursal, AnyDesk, recurso " HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="cmb_empresas" onAction="#habilitarSucursales" prefHeight="25.0" prefWidth="299.0" promptText="Selecciona la empresa" HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="cmb_sucursal" disable="true" onAction="#extraerDatos" prefHeight="37.0" prefWidth="249.0" promptText="Selecciona la sucursal" HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="cmb_tipoRecurso" prefWidth="235.0" promptText="Selecciona tipo de recurso" />
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </top>
+   <center>
+      <ScrollPane prefHeight="280.0" prefWidth="880.0" BorderPane.alignment="CENTER">
+         <content>
+            <FlowPane fx:id="contenedor_flowpane" prefHeight="356.0" prefWidth="877.0" />
+         </content>
+      </ScrollPane>
+   </center>
+</BorderPane>

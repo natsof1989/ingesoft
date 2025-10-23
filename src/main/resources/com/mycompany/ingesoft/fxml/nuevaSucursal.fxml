@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="454.0" prefWidth="591.0" spacing="10.0" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.ingesoft.controllers.NuevaSucursalController">
+   <children>
+      <Label styleClass="section-title" text="Nueva Sucursal" />
+      <Label styleClass="server-name" text="Empresa:" />
+      <ComboBox fx:id="cmb_empresas" prefHeight="25.0" prefWidth="203.0" promptText="Seleccionar empresa" />
+      <Label styleClass="server-name" text="Nombre de la sucursal:" />
+      <TextField fx:id="txt_nombreSucursal" promptText="Ej: Matriz, Sucursal Norte" styleClass="text-field" />
+      <Label text="Dirección:" />
+      <TextField fx:id="txt_direccion" />
+      <Label text="Telefono:" />
+      <TextField fx:id="txt_telefono" />
+      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+         <children>
+            <Button fx:id="btn_cancelar" mnemonicParsing="false" onAction="#cancelar" text="Cancelar" />
+            <Button fx:id="btn_guardar" mnemonicParsing="false" onAction="#guardar" text="Guardar" />
+         </children>
+         <padding>
+            <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+         </padding>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+   </padding>
+</VBox>

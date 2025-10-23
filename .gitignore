@@ -1,0 +1,35 @@
+# Compiled class files
+target/
+*.class
+
+# Log files
+*.log
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# IDE specific files
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+nbproject/
+nbbuild/
+dist/
+nbdist/
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Next.js (if needed for other parts of project)
+.next/
+node_modules/

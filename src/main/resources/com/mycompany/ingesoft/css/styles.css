@@ -1,0 +1,166 @@
+.root {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-background-color: #f8fafc;
+}
+
+/* ===== BARRA SUPERIOR ===== */
+.vbox {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 0 0 1 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+/* Logo */
+.image-view {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+/* Títulos */
+.label {
+    -fx-text-fill: #1e293b;
+}
+
+.label:first-child {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-padding: 5 0 0 0;
+}
+
+.label:nth-child(2) {
+    -fx-font-size: 14px;
+    -fx-text-fill: #64748b;
+    -fx-padding: 0 0 10 0;
+}
+
+/* ===== BARRA DE BÚSQUEDA ===== */
+.hbox {
+    -fx-alignment: center-left;
+    -fx-spacing: 10;
+    -fx-padding: 10 0 0 0;
+}
+
+.text-field {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+    -fx-pref-height: 36px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);
+}
+
+.text-field:focused {
+    -fx-border-color: #3b82f6;
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.2), 8, 0, 0, 2);
+}
+
+.combo-box {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1;
+    -fx-pref-height: 36px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);
+}
+
+.combo-box .list-cell {
+    -fx-background-color: white;
+    -fx-text-fill: #1e293b;
+    -fx-padding: 8 12;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.combo-box-base:hover {
+    -fx-border-color: #cbd5e1;
+}
+
+/* ===== ÁREA PRINCIPAL ===== */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 20;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.flow-pane {
+    -fx-background-color: transparent;
+    -fx-hgap: 15;
+    -fx-vgap: 15;
+    -fx-padding: 10;
+}
+
+/* ===== TARJETAS DE SERVIDORES ===== */
+.server-section {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 3);
+    -fx-pref-width: 400px;
+    -fx-pref-height: 200px;
+}
+
+.section-header {
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 12 12 0 0;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 15;
+}
+
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b;
+}
+
+.server-item {
+    -fx-padding: 12 15;
+    -fx-border-color: #f8fafc;
+    -fx-border-width: 0 0 1 0;
+}
+
+.server-item:last {
+    -fx-border-width: 0;
+}
+
+.server-header {
+    -fx-alignment: center-left;
+    -fx-spacing: 8;
+}
+
+.server-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #1e293b;
+}
+
+.server-badge {
+    -fx-font-size: 11px;
+    -fx-text-fill: #64748b;
+    -fx-padding: 2 6;
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 4;
+}
+
+.connection-info {
+    -fx-alignment: center-left;
+    -fx-spacing: 5;
+    -fx-padding: 5 0 0 20;
+}
+
+.connection-type {
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748b;
+}
