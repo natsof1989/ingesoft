@@ -228,11 +228,11 @@ public class PrimaryController implements Initializable {
         card.getChildren().add(empresaSucursalBox);
 
         // Tipo de Recurso
-        if (recurso.getIdTipoRecurso() != null && !recurso.getNombreTipoRecurso().trim().isEmpty()) {
+        /*if (recurso.getIdTipoRecurso() != null && !recurso.getNombreTipoRecurso().trim().isEmpty()) {
             Label lblTipoRecurso = new Label(recurso.getNombreTipoRecurso());
             lblTipoRecurso.getStyleClass().add("server-badge");
             card.getChildren().add(lblTipoRecurso);
-        }
+        }*/
 
         // Separador
         Separator separator = new Separator();
