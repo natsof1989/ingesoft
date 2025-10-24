@@ -6,12 +6,48 @@ public class Sucursal {
     private String descripcion;
     private String direccion;
     private String telefono;
+    private String nombreEmpresa; 
 
     // Getters y Setters
     public int getIdSucursal() {
         return idSucursal;
     }
 
+    public Sucursal() {
+    }
+
+    public Sucursal(int idSucursal, String descripcion, String direccion, String nombreEmpresa) {
+        this.idSucursal = idSucursal;
+        this.descripcion = descripcion;
+        this.direccion = direccion;
+        this.nombreEmpresa = nombreEmpresa; 
+    }
+
+    public Sucursal(String descripcion, String direccion, String nombreEmpresa) {
+        this.descripcion = descripcion;
+        this.direccion = direccion;
+        this.nombreEmpresa = nombreEmpresa;
+    }
+    
+    
+
+    public Sucursal(int idSucursal, int idEmpresa, String descripcion, String direccion) {
+        this.idSucursal = idSucursal;
+        this.idEmpresa = idEmpresa;
+        this.descripcion = descripcion;
+        this.direccion = direccion;
+    }
+
+    public String getNombreEmpresa() {
+        return nombreEmpresa;
+    }
+
+    public void setNombreEmpresa(String nombreEmpresa) {
+        this.nombreEmpresa = nombreEmpresa;
+    }
+
+    
+    
     public void setIdSucursal(int idSucursal) {
         this.idSucursal = idSucursal;
     }

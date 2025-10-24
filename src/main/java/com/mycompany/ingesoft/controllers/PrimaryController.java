@@ -89,7 +89,7 @@ public class PrimaryController implements Initializable {
             }
         });
 
-        // Cambios en tipo de recurso
+        
         cmb_tipoRecurso.setOnAction(e -> extraerDatos(null));
         
         contenedor_gridpane.widthProperty().addListener(new ChangeListener<Number>() {
@@ -228,11 +228,11 @@ public class PrimaryController implements Initializable {
         card.getChildren().add(empresaSucursalBox);
 
         // Tipo de Recurso
-        /*if (recurso.getIdTipoRecurso() != null && !recurso.getNombreTipoRecurso().trim().isEmpty()) {
-            Label lblTipoRecurso = new Label(recurso.getNombreTipoRecurso());
+        if (recurso.getNombreTipo() != null && !recurso.getNombreTipo().trim().isEmpty()) {
+            Label lblTipoRecurso = new Label(recurso.getNombreTipo());
             lblTipoRecurso.getStyleClass().add("server-badge");
             card.getChildren().add(lblTipoRecurso);
-        }*/
+        }
 
         // Separador
         Separator separator = new Separator();
@@ -309,67 +309,89 @@ public class PrimaryController implements Initializable {
 
         // Separador para credenciales (solo si hay inicio de sesión)
         if (recurso.isInicioSesion() && 
+                
             recurso.getUsuario() != null && !recurso.getUsuario().trim().isEmpty()) {
             
-            Separator credSeparator = new Separator();
-            credSeparator.getStyleClass().add("card-separator");
-            card.getChildren().add(credSeparator);
+            // Sección de credenciales colapsable
+            VBox credSection = new VBox(0);
+            credSection.getStyleClass().add("credentials-section");
             
-            // Sección de credenciales
-            VBox credBox = new VBox(8);
+            // Botón para desplegar/colapsar credenciales
+            Button btnToggleCred = new Button("🔐 Ver Credenciales de Acceso");
+            btnToggleCred.getStyleClass().add("toggle-credentials-button");
+            btnToggleCred.setMaxWidth(Double.MAX_VALUE);
+            btnToggleCred.setOnAction(e -> toggleCredentials(credSection, btnToggleCred, recurso));
+            
+            // Contenedor de credenciales (inicialmente oculto)
+            VBox credBox = new VBox(10);
+            credBox.getStyleClass().add("credentials-container");
+            credBox.setManaged(false);
+            credBox.setVisible(false);
             
             // Usuario
-            HBox usuarioBox = new HBox(8);
-            usuarioBox.getStyleClass().add("info-row");
+            HBox usuarioBox = new HBox(10);
+            usuarioBox.getStyleClass().add("credential-row");
             usuarioBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
             
+            VBox userLabelBox = new VBox(2);
+            Label lblUserLabel = new Label("USUARIO");
+            lblUserLabel.getStyleClass().add("credential-label");
+            
             Label lblUserIcon = new Label("👤");
-            lblUserIcon.getStyleClass().add("info-icon");
+            lblUserIcon.getStyleClass().add("credential-icon");
+            userLabelBox.getChildren().addAll(lblUserLabel, lblUserIcon);
             
             Label lblUsuario = new Label(recurso.getUsuario());
-            lblUsuario.getStyleClass().add("card-info");
+            lblUsuario.getStyleClass().add("credential-value");
             HBox.setHgrow(lblUsuario, javafx.scene.layout.Priority.ALWAYS);
             
             Button btnCopiarUsuario = new Button();
-            btnCopiarUsuario.getStyleClass().add("copy-icon");
+            btnCopiarUsuario.getStyleClass().add("copy-button");
             btnCopiarUsuario.setGraphic(createCopyIcon());
             btnCopiarUsuario.setOnAction(e -> copiarAlPortapapeles(recurso.getUsuario()));
             btnCopiarUsuario.setTooltip(new javafx.scene.control.Tooltip("Copiar usuario"));
             
-            usuarioBox.getChildren().addAll(lblUserIcon, lblUsuario, btnCopiarUsuario);
+            usuarioBox.getChildren().addAll(userLabelBox, lblUsuario, btnCopiarUsuario);
             credBox.getChildren().add(usuarioBox);
 
             // Contraseña (solo si hay datos)
             if (recurso.getContrasena() != null && !recurso.getContrasena().trim().isEmpty()) {
-                HBox passwordBox = new HBox(8);
-                passwordBox.getStyleClass().add("info-row");
+                HBox passwordBox = new HBox(10);
+                passwordBox.getStyleClass().add("credential-row");
                 passwordBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
                 
+                VBox passLabelBox = new VBox(2);
+                Label lblPassLabel = new Label("CONTRASEÑA");
+                lblPassLabel.getStyleClass().add("credential-label");
+                
                 Label lblPassIcon = new Label("🔒");
-                lblPassIcon.getStyleClass().add("info-icon");
+                lblPassIcon.getStyleClass().add("credential-icon");
+                passLabelBox.getChildren().addAll(lblPassLabel, lblPassIcon);
                 
                 Label lblPassword = new Label("••••••••");
-                lblPassword.getStyleClass().add("card-password");
+                lblPassword.getStyleClass().add("credential-password");
                 HBox.setHgrow(lblPassword, javafx.scene.layout.Priority.ALWAYS);
                 
                 Button btnCopiarPassword = new Button();
-                btnCopiarPassword.getStyleClass().add("copy-icon");
+                btnCopiarPassword.getStyleClass().add("copy-button");
                 btnCopiarPassword.setGraphic(createCopyIcon());
                 btnCopiarPassword.setOnAction(e -> copiarAlPortapapeles(recurso.getContrasena()));
                 btnCopiarPassword.setTooltip(new javafx.scene.control.Tooltip("Copiar contraseña"));
                 
-                passwordBox.getChildren().addAll(lblPassIcon, lblPassword, btnCopiarPassword);
+                passwordBox.getChildren().addAll(passLabelBox, lblPassword, btnCopiarPassword);
                 credBox.getChildren().add(passwordBox);
             }
             
-            card.getChildren().add(credBox);
-
-            // Botón de acción
-            Button btnLogin = new Button("🚀 Iniciar sesión");
-            btnLogin.getStyleClass().add("login-button");
+            // Botón de acción (inicialmente oculto)
+            Button btnLogin = new Button("🚀 Iniciar Sesión");
+            btnLogin.getStyleClass().add("login-button-credential");
             btnLogin.setOnAction(e -> iniciarSesion(recurso));
             btnLogin.setMaxWidth(Double.MAX_VALUE);
-            card.getChildren().add(btnLogin);
+            btnLogin.setManaged(false);
+            btnLogin.setVisible(false);
+            
+            credSection.getChildren().addAll(btnToggleCred, credBox, btnLogin);
+            card.getChildren().add(credSection);
         }
 
         return card;
@@ -388,6 +410,30 @@ public class PrimaryController implements Initializable {
             ClipboardContent content = new ClipboardContent();
             content.putString(texto);
             clipboard.setContent(content);
+        }
+    }
+
+    private void toggleCredentials(VBox credSection, Button toggleButton, Recurso recurso) {
+        // Obtener los elementos hijos
+        VBox credBox = (VBox) credSection.getChildren().get(1);
+        Button loginButton = (Button) credSection.getChildren().get(2);
+        
+        if (credBox.isVisible()) {
+            // Colapsar
+            credBox.setVisible(false);
+            credBox.setManaged(false);
+            loginButton.setVisible(false);
+            loginButton.setManaged(false);
+            toggleButton.setText("🔐 Ver Credenciales de Acceso");
+            toggleButton.getStyleClass().remove("toggle-credentials-button-active");
+        } else {
+            // Desplegar
+            credBox.setVisible(true);
+            credBox.setManaged(true);
+            loginButton.setVisible(true);
+            loginButton.setManaged(true);
+            toggleButton.setText("🔒 Ocultar Credenciales de Acceso");
+            toggleButton.getStyleClass().add("toggle-credentials-button-active");
         }
     }
 
@@ -495,9 +541,11 @@ public class PrimaryController implements Initializable {
 
     @FXML
     private void gestionarEmpresas(ActionEvent event) {
+        abrirVentana("gestionarEmpresa", "Gestión de empresas");
     }
 
     @FXML
     private void gestionarSucursales(ActionEvent event) {
+        abrirVentana("gestionarSucursales", "Gestión de sucursales");
     }
 }

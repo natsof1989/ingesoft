@@ -1,0 +1,380 @@
+.root {
+    -fx-background-color: #f8fafc;
+    -fx-font-family: 'Segoe UI', 'Arial', sans-serif;
+}
+
+/* ===== CONTENEDORES PRINCIPALES ===== */
+.main-container {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f8fafc);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+.header-container {
+    -fx-background-color: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -fx-background-radius: 0 0 20 20;
+    -fx-effect: dropshadow(gaussian, rgba(102,126,234,0.3), 15, 0, 0, 5);
+}
+
+.filters-container {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+}
+
+/* ===== TIPOGRAFÍA ===== */
+.app-subtitle {
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #e0e7ff;
+    -fx-font-family: 'Segoe UI', 'Arial', sans-serif;
+}
+
+/* ===== CAMPOS DE BÚSQUEDA Y FILTROS ===== */
+.search-field {
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 12;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 12;
+    -fx-border-width: 2;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #475569;
+    -fx-prompt-text-fill: #94a3b8;
+    -fx-padding: 12 16;
+    -fx-background-insets: 0;
+    -fx-focus-color: #667eea;
+    -fx-faint-focus-color: transparent;
+}
+
+.search-field:focused {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #667eea;
+    -fx-effect: dropshadow(gaussian, rgba(102,126,234,0.2), 8, 0, 0, 2);
+}
+
+.filter-combo {
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 12;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 12;
+    -fx-border-width: 2;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #475569;
+    -fx-prompt-text-fill: #94a3b8;
+    -fx-padding: 12 16;
+    -fx-background-insets: 0;
+}
+
+.filter-combo:focused {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #667eea;
+    -fx-effect: dropshadow(gaussian, rgba(102,126,234,0.2), 8, 0, 0, 2);
+}
+
+.filter-combo .list-cell {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #475569;
+    -fx-font-size: 14px;
+    -fx-padding: 10 12;
+}
+
+.filter-combo .list-cell:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+/* ===== BOTÓN AGREGAR ===== */
+.add-button {
+    -fx-background-color: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    -fx-background-radius: 12;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 12 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.3), 8, 0, 0, 2);
+}
+
+.add-button:hover {
+    -fx-background-color: linear-gradient(135deg, #059669 0%, #047857 100%);
+    -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.4), 12, 0, 0, 3);
+}
+
+.add-button .context-menu {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);
+}
+
+.add-button .menu-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: #374151;
+    -fx-font-size: 14px;
+    -fx-padding: 10 16;
+}
+
+.add-button .menu-item:hover {
+    -fx-background-color: #f3f4f6;
+}
+
+/* ===== CONTENEDOR DE TARJETAS ===== */
+.cards-flow {
+    -fx-background-color: #f8fafc;
+    -fx-padding: 30;
+}
+
+.custom-scroll-pane {
+    -fx-background-color: #f8fafc;
+    -fx-hbar-policy: never;
+    -fx-vbar-policy: as-needed;
+}
+
+.custom-scroll-pane .scroll-bar:vertical {
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 8;
+    -fx-pref-width: 8;
+}
+
+.custom-scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 8;
+}
+
+.custom-scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #cbd5e1;
+    -fx-background-radius: 8;
+}
+
+.custom-scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #94a3b8;
+}
+
+/* ===== TARJETAS MODERNAS ===== */
+.modern-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 12, 0, 0, 4);
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
+}
+
+.modern-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 20, 0, 0, 8);
+}
+
+.card-header {
+    -fx-background-color: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -fx-background-radius: 16 16 0 0;
+    -fx-padding: 20 15 15 15;
+}
+
+.card-icon {
+    -fx-font-size: 32px;
+}
+
+.card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #ffffff;
+    -fx-text-alignment: center;
+}
+
+.card-content {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 0 0 16 16;
+    -fx-padding: 15 20 20 20;
+}
+
+.card-company {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #374151;
+    -fx-text-alignment: center;
+}
+
+.card-location {
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #6b7280;
+    -fx-text-alignment: center;
+}
+
+.card-type {
+    -fx-background-color: #f3f4f6;
+    -fx-background-radius: 20;
+    -fx-text-fill: #374151;
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+    -fx-padding: 4 12;
+}
+
+.card-separator {
+    -fx-background-color: #e5e7eb;
+}
+
+/* ===== INFO BOXES ===== */
+.info-box {
+    -fx-alignment: center;
+    -fx-spacing: 8;
+}
+
+.info-icon {
+    -fx-font-size: 14px;
+}
+
+.info-text {
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #374151;
+    -fx-text-alignment: center;
+}
+
+.copy-button {
+    -fx-background-color: #f3f4f6;
+    -fx-background-radius: 6;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-font-size: 12px;
+    -fx-padding: 4 8;
+    -fx-cursor: hand;
+    -fx-min-width: 28;
+    -fx-min-height: 28;
+    -fx-max-width: 28;
+    -fx-max-height: 28;
+}
+
+.copy-button:hover {
+    -fx-background-color: #e5e7eb;
+    -fx-border-color: #d1d5db;
+}
+
+/* ===== NOTE BOX ===== */
+.note-box {
+    -fx-alignment: center;
+    -fx-spacing: 4;
+}
+
+.note-icon {
+    -fx-font-size: 14px;
+}
+
+.note-text {
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #6b7280;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+}
+
+/* ===== CREDENTIALS BOX ===== */
+.credentials-box {
+    -fx-background-color: #f9fafb;
+    -fx-background-radius: 8;
+    -fx-padding: 12;
+    -fx-alignment: center;
+    -fx-spacing: 8;
+}
+
+.password-text {
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #6b7280;
+    -fx-text-alignment: center;
+}
+
+/* ===== ACTION BUTTON ===== */
+.action-button {
+    -fx-background-color: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    -fx-background-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 10 16;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.3), 6, 0, 0, 2);
+}
+
+.action-button:hover {
+    -fx-background-color: linear-gradient(135deg, #059669 0%, #047857 100%);
+    -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.4), 8, 0, 0, 3);
+}
+
+/* ===== NO RESULTS ===== */
+.no-results {
+    -fx-font-size: 18px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #6b7280;
+    -fx-text-alignment: center;
+    -fx-padding: 40;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 600px) {
+    .modern-card {
+        -fx-pref-width: 100%;
+        -fx-max-width: 100%;
+    }
+    
+    .header-container {
+        -fx-padding: 15 20;
+    }
+    
+    .filters-container {
+        -fx-padding: 0 20 15 20;
+        -fx-spacing: 10;
+    }
+    
+    .search-field, .filter-combo {
+        -fx-pref-height: 40;
+        -fx-font-size: 13px;
+    }
+}
+
+@media (max-width: 900px) {
+    .modern-card {
+        -fx-pref-width: 300;
+        -fx-max-width: 300;
+    }
+}
+
+@media (max-width: 1200px) {
+    .modern-card {
+        -fx-pref-width: 280;
+        -fx-max-width: 280;
+    }
+}
+
+/* ===== ANIMATIONS ===== */
+.modern-card {
+    -fx-scale-x: 1.0;
+    -fx-scale-y: 1.0;
+    -fx-transition: all 0.3s ease;
+}
+
+.modern-card:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.copy-button {
+    -fx-scale-x: 1.0;
+    -fx-scale-y: 1.0;
+    -fx-transition: all 0.2s ease;
+}
+
+.copy-button:hover {
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+.action-button {
+    -fx-scale-x: 1.0;
+    -fx-scale-y: 1.0;
+    -fx-transition: all 0.2s ease;
+}
+
+.action-button:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}

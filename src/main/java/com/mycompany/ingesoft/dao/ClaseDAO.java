@@ -21,6 +21,7 @@ public class ClaseDAO {
         String sql = "SELECT * FROM empresa ORDER BY descripcion";
         try (PreparedStatement ps = conexion.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
+            
             while (rs.next()) {
                 Empresa emp = new Empresa();
                 emp.setIdEmpresa(rs.getInt("id_empresa"));
@@ -30,6 +31,56 @@ public class ClaseDAO {
         }
         return empresas;
     }
+    
+    
+    public List<Sucursal> obtenerSucursalesValidacion(int idEmpresa) throws SQLException {
+        List<Sucursal> sucursales = new ArrayList<>();
+        String sql = "SELECT id_sucursal, descripcion, direccion FROM sucursales WHERE id_empresa=?";
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idEmpresa); // primero esto
+            try (ResultSet rs = ps.executeQuery()) { // después ejecutas
+                while (rs.next()) {
+                    Sucursal sucur = new Sucursal();
+                    sucur.setIdSucursal(rs.getInt("id_sucursal"));
+                    sucur.setDescripcion(rs.getString("descripcion"));
+                    sucur.setDireccion(rs.getString("direccion")); 
+                    sucursales.add(sucur);
+                }
+            }
+        }
+        return sucursales;
+    }
+    
+   public List<Sucursal> obtenerSucursalesObjetos() throws SQLException {
+        List<Sucursal> sucursales = new ArrayList<>();
+        String sql = """
+            SELECT 
+                s.descripcion AS sucursal_desc,
+                s.direccion AS direccion,
+                e.descripcion AS empresa_desc
+            FROM sucursales s
+            INNER JOIN empresa e ON s.id_empresa = e.id_empresa
+            ORDER BY e.descripcion, s.descripcion
+            """;
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Sucursal sucur = new Sucursal();
+                sucur.setDescripcion(rs.getString("sucursal_desc"));
+                sucur.setDireccion(rs.getString("direccion"));
+                sucur.setNombreEmpresa(rs.getString("empresa_desc"));
+                sucursales.add(sucur);
+            }
+        }
+        return sucursales;
+    }
+
+    
+
+    
 
     public boolean insertarEmpresa(Empresa empresa) throws SQLException {
         String sql = "INSERT INTO empresa (descripcion) VALUES (?)";

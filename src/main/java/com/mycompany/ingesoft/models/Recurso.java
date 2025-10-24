@@ -18,6 +18,29 @@ public class Recurso {
     private String nombreSucursal;
     private String nombreTipo;
 
+    public Recurso() {
+    }
+    
+
+    public Recurso(int idRecurso, int idEmpresa, Integer idSucursal, int idTipoRecurso, String titulo, String usuario, String contrasena, String ip, String nota, boolean inicioSesion, String anydesk, String nombreEmpresa, String nombreSucursal, String nombreTipo) {
+        this.idRecurso = idRecurso;
+        this.idEmpresa = idEmpresa;
+        this.idSucursal = idSucursal;
+        this.idTipoRecurso = idTipoRecurso;
+        this.titulo = titulo;
+        this.usuario = usuario;
+        this.contrasena = contrasena;
+        this.ip = ip;
+        this.nota = nota;
+        this.inicioSesion = inicioSesion;
+        this.anydesk = anydesk;
+        this.nombreEmpresa = nombreEmpresa;
+        this.nombreSucursal = nombreSucursal;
+        this.nombreTipo = nombreTipo;
+    }
+    
+    
+
     // Getters y Setters
     public int getIdRecurso() {
         return idRecurso;
@@ -135,4 +158,6 @@ public class Recurso {
     public String toString() {
         return titulo + " (" + nombreTipo + ")";
     }
+
+    
 }
