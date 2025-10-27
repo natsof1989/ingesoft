@@ -240,8 +240,8 @@ private boolean esVacio(String valor) {
     public List<Recurso> obtenerRecursosPorSucursal(int idSucursal) throws SQLException {
         String sql = """
             SELECT r.*, e.descripcion AS empresa_desc, s.descripcion AS sucursal_desc, t.descripcion AS tipo_desc
-            FROM recursos r
-            JOIN empresas e ON r.id_empresa = e.id_empresa
+            FROM recurso r
+            JOIN empresa e ON r.id_empresa = e.id_empresa
             JOIN sucursales s ON r.id_sucursal = s.id_sucursal
             JOIN tipo_recurso t ON r.id_tipo_recurso = t.id_tipo_recurso
             WHERE r.id_sucursal = ?
@@ -259,8 +259,8 @@ private boolean esVacio(String valor) {
     public List<Recurso> obtenerRecursosPorEmpresa(int idEmpresa) throws SQLException {
         String sql = """
             SELECT r.*, e.descripcion AS empresa_desc, s.descripcion AS sucursal_desc, t.descripcion AS tipo_desc
-            FROM recursos r
-            JOIN empresas e ON r.id_empresa = e.id_empresa
+            FROM recurso r
+            JOIN empresa e ON r.id_empresa = e.id_empresa
             LEFT JOIN sucursales s ON r.id_sucursal = s.id_sucursal
             JOIN tipo_recurso t ON r.id_tipo_recurso = t.id_tipo_recurso
             WHERE r.id_empresa = ?
@@ -325,8 +325,8 @@ private boolean esVacio(String valor) {
         public List<Recurso> obtenerRecursosPorTipo(int idTipoRecurso) throws SQLException {
         String sql = """
             SELECT r.*, e.descripcion AS empresa_desc, s.descripcion AS sucursal_desc, t.descripcion AS tipo_desc
-            FROM recursos r
-            JOIN empresas e ON r.id_empresa = e.id_empresa
+            FROM recurso r
+            JOIN empresa e ON r.id_empresa = e.id_empresa
             LEFT JOIN sucursales s ON r.id_sucursal = s.id_sucursal
             JOIN tipo_recurso t ON r.id_tipo_recurso = t.id_tipo_recurso
             WHERE r.id_tipo_recurso = ?
