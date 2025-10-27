@@ -340,5 +340,30 @@ private boolean esVacio(String valor) {
             }
         }
     }
+        // ================== TIPOS DE RECURSO POR SUCURSAL ==================
+public List<TipoRecurso> obtenerTiposRecursoPorSucursal(int idSucursal) throws SQLException {
+    List<TipoRecurso> tipos = new ArrayList<>();
+    String sql = """
+        SELECT DISTINCT tr.id_tipo_recurso, tr.descripcion
+        FROM recurso r
+        JOIN tipo_recurso tr ON r.id_tipo_recurso = tr.id_tipo_recurso
+        WHERE r.id_sucursal = ?
+        ORDER BY tr.descripcion
+    """;
+
+    try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+        ps.setInt(1, idSucursal);
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                TipoRecurso tipo = new TipoRecurso();
+                tipo.setIdTipoRecurso(rs.getInt("id_tipo_recurso"));
+                tipo.setDescripcion(rs.getString("descripcion"));
+                tipos.add(tipo);
+            }
+        }
+    }
+    return tipos;
+}
 
 }
+

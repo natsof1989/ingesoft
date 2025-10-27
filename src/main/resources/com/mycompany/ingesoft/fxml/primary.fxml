@@ -14,10 +14,10 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.ColumnConstraints?>
 
 <!-- Replaced FlowPane with GridPane for responsive layout -->
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1280.0" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.ingesoft.controllers.PrimaryController">
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1280.0" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.ingesoft.controllers.PrimaryController">
    <top>
       <VBox prefHeight="200.0" prefWidth="880.0" styleClass="vbox" BorderPane.alignment="CENTER">
          <children>
@@ -51,7 +51,7 @@
                   <TextField fx:id="txt_buscar" prefHeight="32.0" prefWidth="380.0" promptText="🔎 Buscar por título, empresa, sucursal, AnyDesk, recurso" HBox.hgrow="ALWAYS" />
                   <ComboBox fx:id="cmb_empresas" onAction="#habilitarSucursales" prefHeight="32.0" prefWidth="280.0" promptText="Selecciona la empresa" HBox.hgrow="ALWAYS" />
                   <ComboBox fx:id="cmb_sucursal" disable="true" onAction="#extraerDatos" prefHeight="32.0" prefWidth="240.0" promptText="Selecciona la sucursal" HBox.hgrow="ALWAYS" />
-                  <ComboBox fx:id="cmb_tipoRecurso" prefHeight="32.0" prefWidth="220.0" promptText="Selecciona tipo de recurso" />
+                  <ComboBox fx:id="cmb_tipoRecurso" onAction="#tipoRecurso" prefHeight="32.0" prefWidth="220.0" promptText="Selecciona tipo de recurso" />
                </children>
             </HBox>
          </children>
@@ -61,10 +61,10 @@
       </VBox>
    </top>
    <center>
-      <ScrollPane prefHeight="400.0" prefWidth="880.0" fitToWidth="true" BorderPane.alignment="CENTER">
+      <ScrollPane fitToWidth="true" prefHeight="400.0" prefWidth="880.0" BorderPane.alignment="CENTER">
          <content>
             <!-- Using GridPane instead of FlowPane for responsive grid -->
-            <GridPane fx:id="contenedor_gridpane" hgap="15.0" vgap="15.0" styleClass="grid-container">
+            <GridPane fx:id="contenedor_gridpane" hgap="15.0" styleClass="grid-container" vgap="15.0">
                <padding>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </padding>

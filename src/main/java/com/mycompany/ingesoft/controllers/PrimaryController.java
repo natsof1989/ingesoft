@@ -1,5 +1,5 @@
 package com.mycompany.ingesoft.controllers;
-
+//fwsdd
 import com.mycompany.ingesoft.dao.ClaseDAO;
 import com.mycompany.ingesoft.dao.Conexion;
 import com.mycompany.ingesoft.models.Empresa;
@@ -72,33 +72,40 @@ public class PrimaryController implements Initializable {
     private int currentColumns = 4;
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        conexion = new Conexion();
-        dao = new ClaseDAO(conexion.getCon());
+public void initialize(URL url, ResourceBundle rb) {
+    conexion = new Conexion();
+    dao = new ClaseDAO(conexion.getCon());
 
-        cargarEmpresas();
-        cargarTiposRecurso();
-        cargarTodosLosRecursos();
+    // Cargar solo empresas al inicio
+    cargarEmpresas();
+    cargarTodosLosRecursos();
 
-        // Búsqueda en vivo
-        txt_buscar.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == null || newValue.trim().isEmpty()) {
-                extraerDatos(null);
-            } else {
-                buscarRecursos(newValue);
-            }
-        });
+    // Deshabilitar combos dependientes al inicio
+    cmb_sucursal.setDisable(true);
+    cmb_tipoRecurso.setDisable(true);
 
-        
-        cmb_tipoRecurso.setOnAction(e -> extraerDatos(null));
-        
-        contenedor_gridpane.widthProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                adjustGridColumns(newValue.doubleValue());
-            }
-        });
-    }
+    // Búsqueda en vivo
+    txt_buscar.textProperty().addListener((observable, oldValue, newValue) -> {
+        if (newValue == null || newValue.trim().isEmpty()) {
+            extraerDatos(null);
+        } else {
+            buscarRecursos(newValue);
+        }
+    });
+
+    // Listeners en cascada
+    cmb_empresas.setOnAction(this::habilitarSucursales);   // Empresa → habilita sucursal
+    cmb_sucursal.setOnAction(this::extraerDatos); // Sucursal → habilita tipo recurso
+    
+
+    // Ajuste dinámico de columnas en el grid
+    contenedor_gridpane.widthProperty().addListener(new ChangeListener<Number>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+            adjustGridColumns(newValue.doubleValue());
+        }
+    });
+}
 
     private void adjustGridColumns(double width) {
         int newColumns;
@@ -442,53 +449,77 @@ public class PrimaryController implements Initializable {
     }
 
     @FXML
-    private void habilitarSucursales(ActionEvent event) {
-        Empresa empresaSeleccionada = cmb_empresas.getSelectionModel().getSelectedItem();
+private void habilitarSucursales(ActionEvent event) {
+    Empresa empresaSeleccionada = cmb_empresas.getSelectionModel().getSelectedItem();
 
-        if (empresaSeleccionada != null && empresaSeleccionada.getIdEmpresa() != -1) {
-            try {
-                List<Sucursal> sucursales = dao.obtenerSucursalesPorEmpresa(empresaSeleccionada.getIdEmpresa());
-                Sucursal todas = new Sucursal();
-                todas.setIdSucursal(-1);
-                todas.setDescripcion("Todas las sucursales");
-                sucursales.add(0, todas);
-
-                cmb_sucursal.setItems(FXCollections.observableArrayList(sucursales));
-                cmb_sucursal.getSelectionModel().selectFirst();
-                cmb_sucursal.setDisable(false);
-            } catch (SQLException ex) {
-                Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
-            cmb_sucursal.setDisable(true);
-            cmb_sucursal.getItems().clear();
-        }
-    }
-
-    @FXML
-    private void extraerDatos(ActionEvent event) {
-        Empresa empSel = cmb_empresas.getSelectionModel().getSelectedItem();
-        Sucursal sucSel = cmb_sucursal.getSelectionModel().getSelectedItem();
-        TipoRecurso tipoSel = cmb_tipoRecurso.getSelectionModel().getSelectedItem();
-
+    if (empresaSeleccionada != null && empresaSeleccionada.getIdEmpresa() != -1) {
         try {
-            List<Recurso> lista;
+            List<Sucursal> sucursales = dao.obtenerSucursalesPorEmpresa(empresaSeleccionada.getIdEmpresa());
+            Sucursal todas = new Sucursal();
+            todas.setIdSucursal(-1);
+            todas.setDescripcion("Todas las sucursales");
+            sucursales.add(0, todas);
 
-            if (tipoSel != null && tipoSel.getIdTipoRecurso() != -1) {
-                lista = dao.obtenerRecursosPorTipo(tipoSel.getIdTipoRecurso());
-            } else if (sucSel != null && sucSel.getIdSucursal() != -1) {
-                lista = dao.obtenerRecursosPorSucursal(sucSel.getIdSucursal());
-            } else if (empSel != null && empSel.getIdEmpresa() != -1) {
-                lista = dao.obtenerRecursosPorEmpresa(empSel.getIdEmpresa());
-            } else {
-                lista = dao.obtenerRecursos();
-            }
+            cmb_sucursal.setItems(FXCollections.observableArrayList(sucursales));
+            cmb_sucursal.getSelectionModel().selectFirst();
+            cmb_sucursal.setDisable(false);
 
-            mostrarRecursos(lista);
+            // Resetear tipos
+            cmb_tipoRecurso.getItems().clear();
+            cmb_tipoRecurso.setDisable(true);
+
+            // Mostrar recursos filtrados por empresa
+            extraerDatos(null);
+
         } catch (SQLException ex) {
             Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    } else {
+        cmb_sucursal.setDisable(true);
+        cmb_sucursal.getItems().clear();
+        cmb_tipoRecurso.setDisable(true);
+        cmb_tipoRecurso.getItems().clear();
+        extraerDatos(null);
     }
+}
+
+    @FXML
+private void extraerDatos(ActionEvent event) {
+    Empresa empSel = cmb_empresas.getSelectionModel().getSelectedItem();
+    Sucursal sucSel = cmb_sucursal.getSelectionModel().getSelectedItem();
+    TipoRecurso tipoSel = cmb_tipoRecurso.getSelectionModel().getSelectedItem();
+
+    try {
+        List<Recurso> lista;
+
+        if (tipoSel != null && tipoSel.getIdTipoRecurso() != -1) {
+            lista = dao.obtenerRecursosPorTipo(tipoSel.getIdTipoRecurso());
+        } else if (sucSel != null && sucSel.getIdSucursal() != -1) {
+            lista = dao.obtenerRecursosPorSucursal(sucSel.getIdSucursal());
+
+            // 👉 Al elegir sucursal, cargar tipos de esa sucursal
+            List<TipoRecurso> tipos = dao.obtenerTiposRecursoPorSucursal(sucSel.getIdSucursal());
+            if (tipos == null) tipos = new ArrayList<>();
+            TipoRecurso todos = new TipoRecurso();
+            todos.setIdTipoRecurso(-1);
+            todos.setDescripcion("Todos los tipos de recurso");
+            tipos.add(0, todos);
+
+            cmb_tipoRecurso.setItems(FXCollections.observableArrayList(tipos));
+            cmb_tipoRecurso.getSelectionModel().selectFirst();
+            cmb_tipoRecurso.setDisable(false);
+
+        } else if (empSel != null && empSel.getIdEmpresa() != -1) {
+            lista = dao.obtenerRecursosPorEmpresa(empSel.getIdEmpresa());
+        } else {
+            lista = dao.obtenerRecursos();
+        }
+
+        mostrarRecursos(lista);
+    } catch (SQLException ex) {
+        Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
+    }
+}
 
     private void buscarRecursos(String texto) {
         try {
@@ -546,6 +577,11 @@ public class PrimaryController implements Initializable {
 
     @FXML
     private void gestionarSucursales(ActionEvent event) {
-        abrirVentana("gestionarSucursales", "Gestión de sucursales");
+        abrirVentana("gestionarSucursal", "Gestión de sucursales");
+    }
+
+    @FXML
+    private void tipoRecurso(ActionEvent event) {
+        extraerDatos(event); 
     }
 }
