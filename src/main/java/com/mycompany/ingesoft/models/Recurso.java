@@ -12,6 +12,8 @@ public class Recurso {
     private String nota;
     private boolean inicioSesion;
     private String anydesk;
+    private String user; 
+    private String password; 
 
     // Campos de texto para mostrar nombres de joins
     private String nombreEmpresa;
@@ -37,6 +39,22 @@ public class Recurso {
         this.nombreEmpresa = nombreEmpresa;
         this.nombreSucursal = nombreSucursal;
         this.nombreTipo = nombreTipo;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
     
     

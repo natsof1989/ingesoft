@@ -4,6 +4,8 @@
  */
 package com.mycompany.ingesoft.controllers.clases;
 
+import com.mycompany.ingesoft.models.Recurso;
+
 /**
  *
  * @author natha
@@ -16,7 +18,7 @@ public class singleton {
     
     private int id_sucursal; 
     private String nombreSucursal; 
-    
+    private Recurso recurso; 
     
     private singleton(){}; 
     
@@ -41,6 +43,14 @@ public class singleton {
 
     public void setNombreSucursal(String nombreSucursal) {
         this.nombreSucursal = nombreSucursal;
+    }
+
+    public Recurso getRecurso() {
+        return recurso;
+    }
+
+    public void setRecurso(Recurso recurso) {
+        this.recurso = recurso;
     }
     
     

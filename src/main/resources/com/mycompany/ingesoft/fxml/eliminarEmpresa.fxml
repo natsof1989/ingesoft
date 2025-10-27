@@ -29,8 +29,8 @@
       </TableView>
       <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
          <children>
-            <Button fx:id="btn_cancelar" mnemonicParsing="false" styleClass="arrow-button" text="Cancelar" />
-            <Button fx:id="btn_aceptar" mnemonicParsing="false" prefHeight="25.0" prefWidth="63.0" text="Aceptar" />
+            <Button fx:id="btn_cancelar" mnemonicParsing="false" onAction="#cancelar" styleClass="arrow-button" text="Cancelar" />
+            <Button fx:id="btn_aceptar" mnemonicParsing="false" onAction="#eliminarEmpresa" prefHeight="25.0" prefWidth="63.0" text="Aceptar" />
          </children>
          <padding>
             <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />

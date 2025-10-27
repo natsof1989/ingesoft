@@ -18,16 +18,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
- * Controlador para la ventana Nueva Nota / Recurso
- * Maneja la creación de registros en la tabla recursos
- * con campos opcionales y tipos de recurso variables.
- * 
+
  * @author natha
  */
 public class NuevaNotaController implements Initializable {
@@ -46,6 +45,14 @@ public class NuevaNotaController implements Initializable {
 
     private ClaseDAO dao;
     private Conexion conexion;
+    @FXML
+    private CheckBox chk_inicioSesion;
+    @FXML
+    private VBox vbox_camposLogin;
+    @FXML
+    private TextField txt_usuario_sesion;
+    @FXML
+    private TextField txt_password_sesion;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -54,7 +61,7 @@ public class NuevaNotaController implements Initializable {
         cargarEmpresas();
         cargarTiposDeRecurso();
 
-        // Cuando se selecciona una empresa, carga sus sucursales
+        
         cmb_empresas.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 cargarSucursales(newVal.getIdEmpresa());
@@ -112,7 +119,8 @@ public class NuevaNotaController implements Initializable {
         String ip = valorONulo(txt_IP.getText());
         String anydesk = valorONulo(txt_anydesk.getText());
         String nota = valorONulo(txt_nota.getText());
-
+        String usuarioSesion = valorONulo(txt_usuario_sesion.getText()); 
+        String password_sesion = valorONulo(txt_password_sesion.getText()); 
         Empresa empresaSeleccionada = cmb_empresas.getSelectionModel().getSelectedItem();
         Sucursal sucursalSeleccionada = cmb_sucursales.getSelectionModel().getSelectedItem();
         TipoRecurso tipoSeleccionado = cmb_tipoRecurso.getSelectionModel().getSelectedItem();
@@ -129,6 +137,10 @@ public class NuevaNotaController implements Initializable {
             mostrarAlerta("Error", "Debe seleccionar un tipo de recurso", Alert.AlertType.ERROR);
             return;
         }
+        if(chk_inicioSesion.isSelected()==true && (txt_usuario_sesion.getText().isEmpty() || txt_password_sesion.getText().isEmpty())){
+            mostrarAlerta("Error", "Complete las credenciales necesarias para el inicio de sesión", Alert.AlertType.WARNING);
+            return; 
+        }
 
         try {
             Recurso recurso = new Recurso();
@@ -140,9 +152,15 @@ public class NuevaNotaController implements Initializable {
             recurso.setAnydesk(anydesk);
             recurso.setIdEmpresa(empresaSeleccionada.getIdEmpresa());
             recurso.setIdTipoRecurso(tipoSeleccionado.getIdTipoRecurso());
-            recurso.setInicioSesion(false);
+            if(txt_usuario_sesion.getText().isEmpty() || txt_password_sesion.getText().isEmpty()){
+                recurso.setInicioSesion(false);
+            } else{
+                recurso.setUser(txt_usuario_sesion.getText());
+                recurso.setPassword(txt_password_sesion.getText());
+            }
+            
 
-            // Sucursal opcional
+            
             if (sucursalSeleccionada != null) {
                 recurso.setIdSucursal(sucursalSeleccionada.getIdSucursal());
             } else {
@@ -174,5 +192,18 @@ public class NuevaNotaController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void mostrarCamposLogin(ActionEvent event) {
+        boolean mostrar = chk_inicioSesion.isSelected();
+        vbox_camposLogin.setVisible(mostrar);
+        vbox_camposLogin.setManaged(mostrar);
+        
+        
+        if (!mostrar) {
+            txt_usuario_sesion.clear();
+            txt_password_sesion.clear();
+        }
     }
 }

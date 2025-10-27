@@ -31,7 +31,33 @@ public class ClaseDAO {
         }
         return empresas;
     }
-    
+    public boolean eliminarEmpresa(int idEmpresa) throws SQLException {
+        String sql = "DELETE FROM empresa WHERE id_empresa = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idEmpresa);
+
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+        }
+    }
+
+    public boolean eliminarSucursal(int idSucursal) throws SQLException {
+        String sql = "DELETE FROM sucursales WHERE id_sucursal = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idSucursal);
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas>0; 
+        }
+    }
+    public boolean eliminarRecurso(int idRecurso) throws SQLException {
+        String sql = "DELETE FROM recurso WHERE id_recurso = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idRecurso);
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas>0; 
+        }
+    }
+
     
     public List<Sucursal> obtenerSucursalesValidacion(int idEmpresa) throws SQLException {
         List<Sucursal> sucursales = new ArrayList<>();
@@ -167,6 +193,8 @@ public class ClaseDAO {
         }
         return recursos;
     }
+   
+
 
     public boolean insertarRecurso(Recurso recurso) throws SQLException {
         String sql = "INSERT INTO recurso (titulo, usuario, contrasena, ip, nota, id_empresa, id_sucursal, id_tipo_recurso, inicio_sesion, anydesk) "

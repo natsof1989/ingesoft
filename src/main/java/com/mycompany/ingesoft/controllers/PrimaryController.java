@@ -205,7 +205,7 @@ public void initialize(URL url, ResourceBundle rb) {
         card.setMaxWidth(Double.MAX_VALUE);
         card.setMinWidth(280);
         GridPane.setFillWidth(card, true);
-
+        
         // Título principal
         Label lblTitulo = new Label(recurso.getTitulo());
         lblTitulo.getStyleClass().add("card-title");
@@ -575,13 +575,15 @@ private void extraerDatos(ActionEvent event) {
         abrirVentana("gestionarEmpresa", "Gestión de empresas");
     }
 
-    @FXML
-    private void gestionarSucursales(ActionEvent event) {
-        abrirVentana("gestionarSucursal", "Gestión de sucursales");
-    }
+        @FXML
+     private void gestionarSucursales(ActionEvent event) {
+         abrirVentana("gestionarSucursal", "Gestión de sucursales");
+     }
 
-    @FXML
-    private void tipoRecurso(ActionEvent event) {
-        extraerDatos(event); 
-    }
+     @FXML
+     private void tipoRecurso(ActionEvent event) {
+         extraerDatos(event);
+     }
+     
+
 }
