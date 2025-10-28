@@ -1,5 +1,6 @@
 package com.mycompany.ingesoft.controllers;
 
+import com.mycompany.ingesoft.controllers.clases.singleton;
 import com.mycompany.ingesoft.dao.ClaseDAO;
 import com.mycompany.ingesoft.dao.Conexion;
 import com.mycompany.ingesoft.models.Empresa;
@@ -69,6 +70,10 @@ public class NuevaNotaController implements Initializable {
                 cmb_sucursales.getItems().clear();
             }
         });
+        
+        
+        
+        
     }
 
     private void cargarEmpresas() {

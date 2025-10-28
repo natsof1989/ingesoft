@@ -20,12 +20,16 @@ public class singleton {
     private String nombreSucursal; 
     private Recurso recurso; 
     
+
     private int idRecurso; 
     
     
     
     
     private String fxmlAnterior; 
+
+   
+
     
     private singleton(){}; 
     
@@ -57,6 +61,7 @@ public class singleton {
         return nombreSucursal;
     }
 
+
     public String getFxmlAnterior() {
         return fxmlAnterior;
     }
@@ -69,6 +74,9 @@ public class singleton {
         this.fxmlAnterior = fxmlAnterior;
     }
     
+
+   
+
     
 
     public void setNombreSucursal(String nombreSucursal) {
