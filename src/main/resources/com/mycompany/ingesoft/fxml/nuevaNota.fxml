@@ -1,127 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<!-- Reduced height from 715 to 520 and improved layout with GridPane -->
-
-<VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="500.0" spacing="15.0" styleClass="form-container" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.ingesoft.controllers.NuevaNotaController">
+<VBox alignment="TOP_CENTER" spacing="15.0" prefWidth="500.0" prefHeight="659.0"
+      styleClass="form-container" stylesheets="@../css/styles.css"
+      xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.mycompany.ingesoft.controllers.NuevaNotaController">
+   
    <padding>
-      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+      <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
    </padding>
+
    <children>
       <Label styleClass="form-title" text="Nueva Nota de Acceso" />
-      
-      <!-- Using GridPane for compact two-column layout -->
-      <GridPane hgap="15.0" prefHeight="328.0" prefWidth="458.0" vgap="12.0">
+
+      <GridPane hgap="15.0" vgap="12.0">
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" />
+            <ColumnConstraints percentWidth="50.0" />
+            <ColumnConstraints percentWidth="50.0" />
          </columnConstraints>
-         
-         <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
-            <Label styleClass="form-label" text="Título *" />
-            <TextField fx:id="txt_titulo" promptText="Nombre descriptivo" styleClass="form-input" />
-         </VBox>
-         
-         <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
-            <Label styleClass="form-label" text="Tipo de recurso *" />
-            <ComboBox fx:id="cmb_tipoRecurso" maxWidth="Infinity" prefWidth="220.0" promptText="Selecciona tipo" styleClass="form-input" />
-         </VBox>
-         
-         <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
-            <Label styleClass="form-label" text="Empresa *" />
-            <ComboBox fx:id="cmb_empresas" maxWidth="Infinity" prefWidth="220.0" promptText="Selecciona empresa" styleClass="form-input" />
-         </VBox>
-         
-         <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-            <Label styleClass="form-label" text="Sucursal" />
-            <ComboBox fx:id="cmb_sucursales" maxWidth="Infinity" prefWidth="220.0" promptText="Selecciona sucursal" styleClass="form-input" />
-         </VBox>
-         
-         <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
-            <Label styleClass="form-label" text="IP" />
-            <TextField fx:id="txt_IP" promptText="Dirección IP" styleClass="form-input" />
-         </VBox>
-         
-         <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-            <Label styleClass="form-label" text="AnyDesk ID" />
-            <TextField fx:id="txt_anydesk" promptText="ID de AnyDesk" styleClass="form-input" />
-         </VBox>
-         
-         <!-- Login checkbox spanning both columns -->
-         <CheckBox fx:id="chk_inicioSesion" onAction="#mostrarCamposLogin" text="Inicio de sesión" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="4">
-            <GridPane.margin>
-               <Insets top="25.0" />
-            </GridPane.margin></CheckBox>
-         
-         <!-- Login fields initially hidden, spanning both columns -->
-         <VBox fx:id="vbox_camposLogin" managed="false" spacing="5.0" visible="false" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="4">
-            <GridPane hgap="15.0" vgap="12.0">
-               <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" />
-               </columnConstraints>
-               
-               <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                  <Label styleClass="form-label" text="Usuario" />
-                  <TextField fx:id="txt_usuario_sesion" promptText="Usuario de Sesión" styleClass="form-input" />
-               </VBox>
-               
-               <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                  <Label styleClass="form-label" text="Contraseña" />
-                  <TextField fx:id="txt_password_sesion" promptText="Contraseña de Sesión" styleClass="form-input" />
-               </VBox>
-               <rowConstraints>
-                  <RowConstraints />
-               </rowConstraints>
-            </GridPane>
-         </VBox>
-         <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3">
-            <children>
-               <Label styleClass="form-label" text="Usuario:" />
+
+         <!-- Primera fila -->
+         <children>
+            <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+               <Label styleClass="form-label" text="Título *" />
+               <TextField fx:id="txt_titulo" promptText="Nombre descriptivo" styleClass="form-input" />
+            </VBox>
+
+            <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+               <Label styleClass="form-label" text="Tipo de recurso *" />
+               <ComboBox fx:id="cmb_tipoRecurso" promptText="Selecciona tipo" styleClass="form-input" />
+            </VBox>
+
+            <!-- Segunda fila -->
+            <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+               <Label styleClass="form-label" text="Empresa *" />
+               <ComboBox fx:id="cmb_empresas" promptText="Selecciona empresa" styleClass="form-input" />
+            </VBox>
+
+            <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <Label styleClass="form-label" text="Sucursal" />
+               <ComboBox fx:id="cmb_sucursales" promptText="Selecciona sucursal" styleClass="form-input" />
+            </VBox>
+
+            <!-- Tercera fila -->
+            <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
+               <Label styleClass="form-label" text="IP" />
+               <TextField fx:id="txt_IP" promptText="Dirección IP" styleClass="form-input" />
+            </VBox>
+
+            <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <Label styleClass="form-label" text="AnyDesk ID" />
+               <TextField fx:id="txt_anydesk" promptText="ID de AnyDesk" styleClass="form-input" />
+            </VBox>
+
+            <!-- Cuarta fila -->
+            <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="3">
+               <Label styleClass="form-label" text="Usuario" />
                <TextField fx:id="txt_usuario" promptText="Usuario" styleClass="form-input" />
-            </children>
-         </VBox>
-         <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-            <children>
-               <Label styleClass="form-label" text="Contraseña:" />
-               <PasswordField fx:id="txt_password" promptText="password" styleClass="form-input" />
-            </children>
-         </VBox>
-         <rowConstraints>
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints maxHeight="70.0" minHeight="53.0" prefHeight="64.0" />
-            <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="45.0" />
-            <RowConstraints maxHeight="34.0" minHeight="0.0" prefHeight="0.0" />
-         </rowConstraints>
+            </VBox>
+
+            <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <Label styleClass="form-label" text="Contraseña" />
+               <PasswordField fx:id="txt_password" promptText="Contraseña" styleClass="form-input" />
+            </VBox>
+
+            <!-- Check inicio sesión -->
+            <CheckBox fx:id="chk_inicioSesion" text="Inicio de sesión"
+                      onAction="#mostrarCamposLogin"
+                      GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="4">
+               <GridPane.margin>
+                  <Insets top="20.0" />
+               </GridPane.margin>
+            </CheckBox>
+
+            <!-- Campos adicionales de inicio de sesión -->
+            <VBox fx:id="vbox_camposLogin" spacing="10.0" visible="false" managed="false"
+                  GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="5">
+               <GridPane hgap="15.0" vgap="12.0">
+                  <columnConstraints>
+                     <ColumnConstraints percentWidth="50.0" />
+                     <ColumnConstraints percentWidth="50.0" />
+                  </columnConstraints>
+                  <children>
+                     <VBox spacing="5.0" GridPane.columnIndex="0">
+                        <Label styleClass="form-label" text="Usuario de sesión" />
+                        <TextField fx:id="txt_usuario_sesion" promptText="Usuario de sesión" styleClass="form-input" />
+                     </VBox>
+
+                     <VBox spacing="5.0" GridPane.columnIndex="1">
+                        <Label styleClass="form-label" text="Contraseña de sesión" />
+                        <PasswordField fx:id="txt_password_sesion" promptText="Contraseña de sesión" styleClass="form-input" />
+                     </VBox>
+                  </children>
+               </GridPane>
+            </VBox>
+         </children>
       </GridPane>
-      
+
+      <!-- Descripción -->
       <VBox spacing="5.0">
          <Label styleClass="form-label" text="Descripción" />
-         <TextArea fx:id="txt_nota" prefHeight="80.0" promptText="Notas adicionales..." styleClass="form-textarea" />
+         <TextArea fx:id="txt_nota" promptText="Notas adicionales..." prefHeight="80.0" styleClass="form-textarea" />
       </VBox>
-      
+
+      <!-- Botones -->
       <HBox alignment="CENTER_RIGHT" spacing="10.0">
-         <padding>
-            <Insets top="10.0" />
-         </padding>
-         <children>
-            <Button fx:id="btn_cancelar" mnemonicParsing="false" onAction="#cancelar" styleClass="form-button-secondary" text="Cancelar" />
-            <Button fx:id="btn_guardar" mnemonicParsing="false" onAction="#guardar" styleClass="form-button-primary" text="Guardar" />
-         </children>
+         <padding><Insets top="10.0" /></padding>
+         <Button fx:id="btn_cancelar" onAction="#cancelar" text="Cancelar" styleClass="form-button-secondary" />
+         <Button fx:id="btn_guardar" onAction="#guardar" text="Guardar" styleClass="form-button-primary" />
       </HBox>
    </children>
 </VBox>
