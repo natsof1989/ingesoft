@@ -1,31 +1,40 @@
 package com.mycompany.ingesoft.models;
 
+/**
+ * Modelo para la tabla recurso
+ * Contiene información de accesos y credenciales
+ */
 public class Recurso {
-    private int idRecurso;
-    private int idEmpresa;
-    private Integer idSucursal; // nullable
-    private int idTipoRecurso;
+    private Integer idRecurso;
+    private Integer idEmpresa;
+    private Integer idSucursal;
+    private Integer idTipoRecurso;
     private String titulo;
-    private String usuario;
-    private String contrasena;
+    private String usuario;        // Para otros tipos de datos (no login)
+    private String contrasena;     // Para otros tipos de datos (no login)
     private String ip;
     private String nota;
-    private boolean inicioSesion;
+    private Boolean inicioSesion;
     private String anydesk;
+
     
     // 🔥 CAMPOS NUEVOS PARA DATOS DE SESIÓN
     private String usuarioSesion;
     private String passwordSesion;
 
     // Campos de texto para mostrar nombres de joins
+
+    // Campos adicionales para mostrar nombres
+
     private String nombreEmpresa;
     private String nombreSucursal;
-    private String nombreTipo;
+    private String nombreTipoRecurso;
 
     public Recurso() {
+        this.inicioSesion = false;
     }
 
-    public Recurso(int idRecurso, int idEmpresa, Integer idSucursal, int idTipoRecurso, String titulo, String usuario, String contrasena, String ip, String nota, boolean inicioSesion, String anydesk, String nombreEmpresa, String nombreSucursal, String nombreTipo) {
+    public Recurso(Integer idRecurso, Integer idEmpresa, Integer idSucursal, Integer idTipoRecurso, String titulo, String usuario, String contrasena, String ip, String nota, Boolean inicioSesion, String anydesk, String usuarioSesion, String passwordSesion, String nombreEmpresa, String nombreSucursal, String nombreTipoRecurso) {
         this.idRecurso = idRecurso;
         this.idEmpresa = idEmpresa;
         this.idSucursal = idSucursal;
@@ -37,10 +46,14 @@ public class Recurso {
         this.nota = nota;
         this.inicioSesion = inicioSesion;
         this.anydesk = anydesk;
+        this.usuarioSesion = usuarioSesion;
+        this.passwordSesion = passwordSesion;
         this.nombreEmpresa = nombreEmpresa;
         this.nombreSucursal = nombreSucursal;
-        this.nombreTipo = nombreTipo;
+        this.nombreTipoRecurso = nombreTipoRecurso;
     }
+
+
 
     // 🔥 MANTENEMOS ESTOS MÉTODOS POR SI LOS USAS EN OTRA PARTE
     public String getUser() {
@@ -61,18 +74,21 @@ public class Recurso {
     
     // Getters y Setters principales
     public int getIdRecurso() {
-        return idRecurso;
+        return idRecurso; 
     }
 
-    public void setIdRecurso(int idRecurso) {
+    // Getters y Setters
+    
+
+    public void setIdRecurso(Integer idRecurso) {
         this.idRecurso = idRecurso;
     }
 
-    public int getIdEmpresa() {
+    public Integer getIdEmpresa() {
         return idEmpresa;
     }
 
-    public void setIdEmpresa(int idEmpresa) {
+    public void setIdEmpresa(Integer idEmpresa) {
         this.idEmpresa = idEmpresa;
     }
 
@@ -84,11 +100,11 @@ public class Recurso {
         this.idSucursal = idSucursal;
     }
 
-    public int getIdTipoRecurso() {
+    public Integer getIdTipoRecurso() {
         return idTipoRecurso;
     }
 
-    public void setIdTipoRecurso(int idTipoRecurso) {
+    public void setIdTipoRecurso(Integer idTipoRecurso) {
         this.idTipoRecurso = idTipoRecurso;
     }
 
@@ -132,11 +148,11 @@ public class Recurso {
         this.nota = nota;
     }
 
-    public boolean isInicioSesion() {
+    public Boolean isInicioSesion() {
         return inicioSesion;
     }
 
-    public void setInicioSesion(boolean inicioSesion) {
+    public void setInicioSesion(Boolean inicioSesion) {
         this.inicioSesion = inicioSesion;
     }
 
@@ -148,6 +164,7 @@ public class Recurso {
         this.anydesk = anydesk;
     }
 
+    
     public String getNombreEmpresa() {
         return nombreEmpresa;
     }
@@ -164,12 +181,12 @@ public class Recurso {
         this.nombreSucursal = nombreSucursal;
     }
 
-    public String getNombreTipo() {
-        return nombreTipo;
+    public String getNombreTipoRecurso() {
+        return nombreTipoRecurso;
     }
 
-    public void setNombreTipo(String nombreTipo) {
-        this.nombreTipo = nombreTipo;
+    public void setNombreTipoRecurso(String nombreTipoRecurso) {
+        this.nombreTipoRecurso = nombreTipoRecurso;
     }
 
     // 🔥 NUEVOS GETTERS Y SETTERS PARA DATOS DE SESIÓN
@@ -191,6 +208,12 @@ public class Recurso {
 
     @Override
     public String toString() {
-        return titulo + " (" + nombreTipo + ")";
+        return "Recurso{" +
+                "idRecurso=" + idRecurso +
+                ", titulo='" + titulo + '\'' +
+                ", empresa='" + nombreEmpresa + '\'' +
+                ", sucursal='" + nombreSucursal + '\'' +
+                ", inicioSesion=" + inicioSesion +
+                '}';
     }
 }

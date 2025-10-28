@@ -1,5 +1,5 @@
 package com.mycompany.ingesoft.controllers;
-//fwsdd
+
 import com.mycompany.ingesoft.controllers.clases.singleton;
 import com.mycompany.ingesoft.dao.ClaseDAO;
 import com.mycompany.ingesoft.dao.Conexion;
@@ -73,6 +73,10 @@ public class PrimaryController implements Initializable {
     private ClaseDAO dao;
     private Conexion conexion;
     private int currentColumns = 4;
+    
+    private int idEmpresaSelected = 0; 
+    private int idSucursalSelected = 0; 
+    private int idTipoRecursoSelected = 0; 
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -81,6 +85,7 @@ public class PrimaryController implements Initializable {
 
         // Cargar solo empresas al inicio
         cargarEmpresas();
+        cargarTiposRecurso();
         cargarTodosLosRecursos();
 
         // Deshabilitar combos dependientes al inicio
@@ -99,8 +104,8 @@ public class PrimaryController implements Initializable {
         // Listeners en cascada
         cmb_empresas.setOnAction(this::habilitarSucursales);   // Empresa → habilita sucursal
         cmb_sucursal.setOnAction(this::extraerDatos); // Sucursal → habilita tipo recurso
+        cmb_tipoRecurso.setOnAction(e -> extraerDatos(null));
         
-
         // Ajuste dinámico de columnas en el grid
         contenedor_gridpane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -214,6 +219,7 @@ public class PrimaryController implements Initializable {
         HBox headerBox = new HBox();
         headerBox.setAlignment(javafx.geometry.Pos.CENTER);
 
+        // Título principal
         Label lblTitulo = new Label(recurso.getTitulo());
         lblTitulo.getStyleClass().add("card-title");
         lblTitulo.setWrapText(true);
@@ -225,7 +231,6 @@ public class PrimaryController implements Initializable {
         menuAcciones.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
         HBox contenedor = new HBox(menuAcciones);
         contenedor.setAlignment(Pos.CENTER_LEFT);
-
 
         MenuItem itemEditar = new MenuItem("Editar");
         itemEditar.setOnAction(e -> editarRecurso(recurso));
@@ -258,9 +263,9 @@ public class PrimaryController implements Initializable {
         }
         card.getChildren().add(empresaSucursalBox);
 
-        // Tipo de recurso
-        if (recurso.getNombreTipo() != null && !recurso.getNombreTipo().trim().isEmpty()) {
-            Label lblTipoRecurso = new Label(recurso.getNombreTipo());
+        // Tipo de Recurso
+        if (recurso.getIdTipoRecurso()!= null && !recurso.getNombreTipoRecurso().trim().isEmpty()) {
+            Label lblTipoRecurso = new Label(recurso.getNombreTipoRecurso());
             lblTipoRecurso.getStyleClass().add("server-badge");
             card.getChildren().add(lblTipoRecurso);
         }
