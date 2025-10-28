@@ -49,14 +49,6 @@ public class ClaseDAO {
             return filasAfectadas>0; 
         }
     }
-    public boolean eliminarRecurso(int idRecurso) throws SQLException {
-        String sql = "DELETE FROM recurso WHERE id_recurso = ?";
-        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setInt(1, idRecurso);
-            int filasAfectadas = ps.executeUpdate();
-            return filasAfectadas>0; 
-        }
-    }
 
     
     public List<Sucursal> obtenerSucursalesValidacion(int idEmpresa) throws SQLException {
@@ -346,7 +338,7 @@ private boolean esVacio(String valor) {
         r.setAnydesk(rs.getString("anydesk"));
         r.setNombreEmpresa(rs.getString("empresa_desc"));
         r.setNombreSucursal(rs.getString("sucursal_desc"));
-        r.setNombreTipo(rs.getString("tipo_desc"));
+        r.setNombreTipoRecurso(rs.getString("tipo_desc"));
         return r;
     }
     
@@ -392,6 +384,38 @@ public List<TipoRecurso> obtenerTiposRecursoPorSucursal(int idSucursal) throws S
     }
     return tipos;
 }
+public Recurso obtenerRecursoPorId(int idRecurso) throws SQLException {
+    String sql = """
+        SELECT r.*, 
+               e.descripcion AS empresa_desc, 
+               s.descripcion AS sucursal_desc, 
+               t.descripcion AS tipo_desc
+        FROM recurso r
+        JOIN empresa e ON r.id_empresa = e.id_empresa
+        LEFT JOIN sucursales s ON r.id_sucursal = s.id_sucursal
+        JOIN tipo_recurso t ON r.id_tipo_recurso = t.id_tipo_recurso
+        WHERE r.id_recurso = ?
+    """;
+
+    try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+        ps.setInt(1, idRecurso);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return mapRecurso(rs); // mapea a un solo objeto
+            } else {
+                return null; // no se encontró
+            }
+        }
+    }
+}
+public boolean eliminarRecurso(int IdRecurso) throws SQLException {
+    String sql = "DELETE FROM recurso WHERE id_recurso = ?";
+    try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+        ps.setInt(1, IdRecurso);
+        return ps.executeUpdate() > 0;
+    }
+}
+
 
 }
 

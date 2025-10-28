@@ -20,6 +20,13 @@ public class singleton {
     private String nombreSucursal; 
     private Recurso recurso; 
     
+    private int idRecurso; 
+    
+    
+    
+    
+    private String fxmlAnterior; 
+    
     private singleton(){}; 
     
     public static singleton getInstancia(){
@@ -33,6 +40,15 @@ public class singleton {
         return id_sucursal;
     }
 
+    public int getIdRecurso() {
+        return idRecurso;
+    }
+
+    public void setIdRecurso(int idRecurso) {
+        this.idRecurso = idRecurso;
+    }
+    
+
     public void setId_sucursal(int id_sucursal) {
         this.id_sucursal = id_sucursal;
     }
@@ -40,6 +56,20 @@ public class singleton {
     public String getNombreSucursal() {
         return nombreSucursal;
     }
+
+    public String getFxmlAnterior() {
+        return fxmlAnterior;
+    }
+
+    public singleton(String fxmlAnterior) {
+        this.fxmlAnterior = fxmlAnterior;
+    }
+
+    public void setFxmlAnterior(String fxmlAnterior) {
+        this.fxmlAnterior = fxmlAnterior;
+    }
+    
+    
 
     public void setNombreSucursal(String nombreSucursal) {
         this.nombreSucursal = nombreSucursal;
