@@ -20,6 +20,8 @@ public class singleton {
     private String nombreSucursal; 
     private Recurso recurso; 
     
+   
+    
     private singleton(){}; 
     
     public static singleton getInstancia(){
@@ -40,6 +42,9 @@ public class singleton {
     public String getNombreSucursal() {
         return nombreSucursal;
     }
+
+   
+    
 
     public void setNombreSucursal(String nombreSucursal) {
         this.nombreSucursal = nombreSucursal;
