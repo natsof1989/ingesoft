@@ -12,8 +12,10 @@ public class Recurso {
     private String nota;
     private boolean inicioSesion;
     private String anydesk;
-    private String user; 
-    private String password; 
+    
+    // 🔥 CAMPOS NUEVOS PARA DATOS DE SESIÓN
+    private String usuarioSesion;
+    private String passwordSesion;
 
     // Campos de texto para mostrar nombres de joins
     private String nombreEmpresa;
@@ -22,7 +24,6 @@ public class Recurso {
 
     public Recurso() {
     }
-    
 
     public Recurso(int idRecurso, int idEmpresa, Integer idSucursal, int idTipoRecurso, String titulo, String usuario, String contrasena, String ip, String nota, boolean inicioSesion, String anydesk, String nombreEmpresa, String nombreSucursal, String nombreTipo) {
         this.idRecurso = idRecurso;
@@ -41,25 +42,24 @@ public class Recurso {
         this.nombreTipo = nombreTipo;
     }
 
+    // 🔥 MANTENEMOS ESTOS MÉTODOS POR SI LOS USAS EN OTRA PARTE
     public String getUser() {
-        return user;
+        return usuario; // Retornamos el mismo campo
     }
 
     public void setUser(String user) {
-        this.user = user;
+        this.usuario = user; // Asignamos al mismo campo
     }
 
     public String getPassword() {
-        return password;
+        return contrasena; // Retornamos el mismo campo
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.contrasena = password; // Asignamos al mismo campo
     }
     
-    
-
-    // Getters y Setters
+    // Getters y Setters principales
     public int getIdRecurso() {
         return idRecurso;
     }
@@ -172,10 +172,25 @@ public class Recurso {
         this.nombreTipo = nombreTipo;
     }
 
+    // 🔥 NUEVOS GETTERS Y SETTERS PARA DATOS DE SESIÓN
+    public String getUsuarioSesion() {
+        return usuarioSesion;
+    }
+
+    public void setUsuarioSesion(String usuarioSesion) {
+        this.usuarioSesion = usuarioSesion;
+    }
+
+    public String getPasswordSesion() {
+        return passwordSesion;
+    }
+
+    public void setPasswordSesion(String passwordSesion) {
+        this.passwordSesion = passwordSesion;
+    }
+
     @Override
     public String toString() {
         return titulo + " (" + nombreTipo + ")";
     }
-
-    
 }

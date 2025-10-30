@@ -330,44 +330,29 @@ private boolean esVacio(String valor) {
         }
     }
 
-    // ================== MÉTODO AUXILIAR ==================
-    private Recurso mapRecurso(ResultSet rs) throws SQLException {
-        Recurso r = new Recurso();
-        r.setIdRecurso(rs.getInt("id_recurso"));
-        r.setIdEmpresa(rs.getInt("id_empresa"));
-        r.setIdSucursal((Integer) rs.getObject("id_sucursal"));
-        r.setIdTipoRecurso(rs.getInt("id_tipo_recurso"));
-        r.setTitulo(rs.getString("titulo"));
-        r.setUsuario(rs.getString("usuario"));
-        r.setContrasena(rs.getString("contrasena"));
-        r.setIp(rs.getString("ip"));
-        r.setNota(rs.getString("nota"));
-        r.setInicioSesion(rs.getBoolean("inicio_sesion"));
-        r.setAnydesk(rs.getString("anydesk"));
-        r.setNombreEmpresa(rs.getString("empresa_desc"));
-        r.setNombreSucursal(rs.getString("sucursal_desc"));
-        r.setNombreTipo(rs.getString("tipo_desc"));
-        return r;
-    }
+private Recurso mapRecurso(ResultSet rs) throws SQLException {
+    Recurso r = new Recurso();
+    r.setIdRecurso(rs.getInt("id_recurso"));
+    r.setIdEmpresa(rs.getInt("id_empresa"));
+    r.setIdSucursal((Integer) rs.getObject("id_sucursal"));
+    r.setIdTipoRecurso(rs.getInt("id_tipo_recurso"));
+    r.setTitulo(rs.getString("titulo"));
+    r.setUsuario(rs.getString("usuario"));
+    r.setContrasena(rs.getString("contrasena"));
+    r.setIp(rs.getString("ip"));
+    r.setNota(rs.getString("nota"));
+    r.setInicioSesion(rs.getBoolean("inicio_sesion"));
+    r.setAnydesk(rs.getString("anydesk"));
+    r.setNombreEmpresa(rs.getString("empresa_desc"));
+    r.setNombreSucursal(rs.getString("sucursal_desc"));
+    r.setNombreTipo(rs.getString("tipo_desc"));
     
-        public List<Recurso> obtenerRecursosPorTipo(int idTipoRecurso) throws SQLException {
-        String sql = """
-            SELECT r.*, e.descripcion AS empresa_desc, s.descripcion AS sucursal_desc, t.descripcion AS tipo_desc
-            FROM recurso r
-            JOIN empresa e ON r.id_empresa = e.id_empresa
-            LEFT JOIN sucursales s ON r.id_sucursal = s.id_sucursal
-            JOIN tipo_recurso t ON r.id_tipo_recurso = t.id_tipo_recurso
-            WHERE r.id_tipo_recurso = ?
-        """;
-        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setInt(1, idTipoRecurso);
-            try (ResultSet rs = ps.executeQuery()) {
-                List<Recurso> lista = new ArrayList<>();
-                while (rs.next()) lista.add(mapRecurso(rs));
-                return lista;
-            }
-        }
-    }
+    // 🔥 SIMPLEMENTE NO USAR ESTOS CAMPOS:
+    r.setUsuarioSesion(null);
+    r.setPasswordSesion(null);
+    
+    return r;
+}
         // ================== TIPOS DE RECURSO POR SUCURSAL ==================
 public List<TipoRecurso> obtenerTiposRecursoPorSucursal(int idSucursal) throws SQLException {
     List<TipoRecurso> tipos = new ArrayList<>();
@@ -392,6 +377,77 @@ public List<TipoRecurso> obtenerTiposRecursoPorSucursal(int idSucursal) throws S
     }
     return tipos;
 }
+public Recurso obtenerRecursoPorId(int idRecurso) throws SQLException {
+    String sql = """
+        SELECT r.*, e.descripcion AS empresa_desc, s.descripcion AS sucursal_desc, 
+               tr.descripcion AS tipo_desc
+        FROM recurso r
+        JOIN empresa e ON r.id_empresa = e.id_empresa
+        LEFT JOIN sucursales s ON r.id_sucursal = s.id_sucursal
+        JOIN tipo_recurso tr ON r.id_tipo_recurso = tr.id_tipo_recurso
+        WHERE r.id_recurso = ?
+    """;
+    
+    try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+        ps.setInt(1, idRecurso);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return mapRecurso(rs);
+            }
+        }
+    }
+    return null;
+}
+public boolean actualizarRecurso(Recurso recurso) throws SQLException {
+    String sql = """
+        UPDATE recurso 
+        SET titulo = ?, ip = ?, anydesk = ?, nota = ?, usuario = ?, contrasena = ?, 
+            id_empresa = ?, id_sucursal = ?, id_tipo_recurso = ?, 
+            usuario_sesion = ?, password_sesion = ?
+        WHERE id_recurso = ?
+    """;
+    
+    try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+        ps.setString(1, recurso.getTitulo());
+        ps.setString(2, recurso.getIp());
+        ps.setString(3, recurso.getAnydesk());
+        ps.setString(4, recurso.getNota());
+        ps.setString(5, recurso.getUsuario());
+        ps.setString(6, recurso.getContrasena());
+        ps.setInt(7, recurso.getIdEmpresa());
+        
+        if (recurso.getIdSucursal() != null) {
+            ps.setInt(8, recurso.getIdSucursal());
+        } else {
+            ps.setNull(8, java.sql.Types.INTEGER);
+        }
+        
+        ps.setInt(9, recurso.getIdTipoRecurso());
+        ps.setString(10, recurso.getUsuarioSesion());
+        ps.setString(11, recurso.getPasswordSesion());
+        ps.setInt(12, recurso.getIdRecurso());
+        
+        return ps.executeUpdate() > 0;
+    }
+}
+public List<Recurso> obtenerRecursosPorTipo(int idTipoRecurso) throws SQLException {
+    String sql = """
+        SELECT r.*, e.descripcion AS empresa_desc, s.descripcion AS sucursal_desc, t.descripcion AS tipo_desc
+        FROM recurso r
+        JOIN empresa e ON r.id_empresa = e.id_empresa
+        LEFT JOIN sucursales s ON r.id_sucursal = s.id_sucursal
+        JOIN tipo_recurso t ON r.id_tipo_recurso = t.id_tipo_recurso
+        WHERE r.id_tipo_recurso = ?
+    """;
+    try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+        ps.setInt(1, idTipoRecurso);
+        try (ResultSet rs = ps.executeQuery()) {
+            List<Recurso> lista = new ArrayList<>();
+            while (rs.next()) lista.add(mapRecurso(rs));
+            return lista;
+        }
+    }
+}   
 
 }
 

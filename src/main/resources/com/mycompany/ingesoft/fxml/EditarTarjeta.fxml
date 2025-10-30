@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="TOP_CENTER" prefHeight="659.0" prefWidth="500.0" spacing="15.0" styleClass="form-container" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.ingesoft.controllers.EditarTarjetaController">
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+   <children>
+      <Label styleClass="form-title" text="Editar Tarjeta" />
+      <GridPane hgap="15.0" vgap="12.0">
+         <columnConstraints>
+            <ColumnConstraints percentWidth="50.0" />
+            <ColumnConstraints percentWidth="50.0" />
+         </columnConstraints>
+         <children>
+            <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+               <children>
+                  <Label styleClass="form-label" text="Título *" />
+                  <TextField fx:id="inputTitulo" promptText="Nombre descriptivo" styleClass="form-input" />
+               </children>
+            </VBox>
+            <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+               <children>
+                  <Label styleClass="form-label" text="Tipo de recurso *" />
+                  <ComboBox fx:id="comboTipoRecurso" promptText="Selecciona tipo" styleClass="form-input" />
+               </children>
+            </VBox>
+            <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+               <children>
+                  <Label styleClass="form-label" text="Empresa *" />
+                  <ComboBox fx:id="comboEmpresas" promptText="Selecciona empresa" styleClass="form-input" />
+               </children>
+               
+            </VBox>
+            <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <Label styleClass="form-label" text="Sucursal" />
+                  <ComboBox fx:id="comboSucursales" promptText="Selecciona sucursal" styleClass="form-input" />
+               </children>
+            </VBox>
+            <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
+               <children>
+                  <Label styleClass="form-label" text="IP" />
+                  <TextField fx:id="inputIP" promptText="Dirección IP" styleClass="form-input" />
+               </children>
+            </VBox>
+            <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <children>
+                  <Label styleClass="form-label" text="AnyDesk ID" />
+                  <TextField fx:id="inputAnyDesk" promptText="ID de AnyDesk" styleClass="form-input" />
+               </children>
+            </VBox>
+            <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="3">
+               <children>
+                  <Label styleClass="form-label" text="Usuario" />
+                  <TextField fx:id="inputUsuario" promptText="Usuario" styleClass="form-input" />
+               </children>
+            </VBox>
+            <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <children>
+                  <Label styleClass="form-label" text="Contraseña" />
+                  <PasswordField fx:id="inputPassword" promptText="Contraseña" styleClass="form-input" />
+               </children>
+            </VBox>
+            <CheckBox fx:id="chkInicioSesion" onAction="#mostrarCamposLogin" text="Inicio de sesión" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="4">
+               <GridPane.margin>
+                  <Insets top="20.0" />
+               </GridPane.margin>
+            </CheckBox>
+            <VBox fx:id="vboxCamposLogin" managed="false" spacing="10.0" visible="false" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="5">
+               <children>
+                  <GridPane hgap="15.0" vgap="12.0">
+                     <columnConstraints>
+                        <ColumnConstraints percentWidth="50.0" />
+                        <ColumnConstraints percentWidth="50.0" />
+                     </columnConstraints>
+                     <children>
+                        <VBox spacing="5.0" GridPane.columnIndex="0">
+                           <children>
+                              <Label styleClass="form-label" text="Usuario de sesión" />
+                              <TextField fx:id="inputUsuarioSesion" promptText="Usuario de sesión" styleClass="form-input" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="5.0" GridPane.columnIndex="1">
+                           <children>
+                              <Label styleClass="form-label" text="Contraseña de sesión" />
+                              <PasswordField fx:id="inputPasswordSesion" promptText="Contraseña de sesión" styleClass="form-input" />
+                           </children>
+                        </VBox>
+                     </children>
+                     <rowConstraints>
+                        <RowConstraints />
+                     </rowConstraints>
+                  </GridPane>
+               </children>
+            </VBox>
+         </children>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+      </GridPane>
+      <VBox spacing="5.0">
+         <children>
+            <Label styleClass="form-label" text="Descripción" />
+            <TextArea fx:id="textAreaDescripcion" prefHeight="80.0" promptText="Notas adicionales..." styleClass="form-textarea" />
+         </children>
+      </VBox>
+      <HBox alignment="CENTER_RIGHT" spacing="10.0">
+         <padding>
+            <Insets top="10.0" />
+         </padding>
+         <children>
+            <Button fx:id="btnCancelar" onAction="#cancelar" styleClass="form-button-secondary" text="Cancelar" />
+            <Button fx:id="btnGuardar" onAction="#guardar" styleClass="form-button-primary" text="Guardar" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
