@@ -16,16 +16,44 @@ public class Recurso {
     private String nota;
     private Boolean inicioSesion;
     private String anydesk;
-    private String user;           // Usuario para inicio de sesión
-    private String password;       // Contraseña para inicio de sesión
+
+
     
+    // 🔥 CAMPOS NUEVOS PARA DATOS DE SESIÓN
+    private String usuarioSesion;
+    private String passwordSesion;
+
+    // Campos de texto para mostrar nombres de joins
+
     // Campos adicionales para mostrar nombres
+
+
     private String nombreEmpresa;
     private String nombreSucursal;
     private String nombreTipoRecurso;
 
     public Recurso() {
         this.inicioSesion = false;
+    }
+
+
+    public Recurso(Integer idRecurso, Integer idEmpresa, Integer idSucursal, Integer idTipoRecurso, String titulo, String usuario, String contrasena, String ip, String nota, Boolean inicioSesion, String anydesk, String usuarioSesion, String passwordSesion, String nombreEmpresa, String nombreSucursal, String nombreTipoRecurso) {
+        this.idRecurso = idRecurso;
+        this.idEmpresa = idEmpresa;
+        this.idSucursal = idSucursal;
+        this.idTipoRecurso = idTipoRecurso;
+        this.titulo = titulo;
+        this.usuario = usuario;
+        this.contrasena = contrasena;
+        this.ip = ip;
+        this.nota = nota;
+        this.inicioSesion = inicioSesion;
+        this.anydesk = anydesk;
+        this.usuarioSesion = usuarioSesion;
+        this.passwordSesion = passwordSesion;
+        this.nombreEmpresa = nombreEmpresa;
+        this.nombreSucursal = nombreSucursal;
+        this.nombreTipoRecurso = nombreTipoRecurso;
     }
 
    
@@ -35,7 +63,32 @@ public class Recurso {
     // Getters y Setters
     public Integer getIdRecurso() {
         return idRecurso;
+
     }
+
+
+
+    // 🔥 MANTENEMOS ESTOS MÉTODOS POR SI LOS USAS EN OTRA PARTE
+    public String getUser() {
+        return usuario; // Retornamos el mismo campo
+    }
+
+    public void setUser(String user) {
+        this.usuario = user; // Asignamos al mismo campo
+    }
+
+    public String getPassword() {
+        return contrasena; // Retornamos el mismo campo
+    }
+
+    public void setPassword(String password) {
+        this.contrasena = password; // Asignamos al mismo campo
+    }
+    
+   
+    // Getters y Setters
+    
+
 
     public void setIdRecurso(Integer idRecurso) {
         this.idRecurso = idRecurso;
@@ -121,21 +174,6 @@ public class Recurso {
         this.anydesk = anydesk;
     }
 
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public String getNombreEmpresa() {
         return nombreEmpresa;
@@ -159,6 +197,25 @@ public class Recurso {
 
     public void setNombreTipoRecurso(String nombreTipoRecurso) {
         this.nombreTipoRecurso = nombreTipoRecurso;
+
+    }
+
+    // 🔥 NUEVOS GETTERS Y SETTERS PARA DATOS DE SESIÓN
+    public String getUsuarioSesion() {
+        return usuarioSesion;
+    }
+
+    public void setUsuarioSesion(String usuarioSesion) {
+        this.usuarioSesion = usuarioSesion;
+    }
+
+    public String getPasswordSesion() {
+        return passwordSesion;
+    }
+
+    public void setPasswordSesion(String passwordSesion) {
+        this.passwordSesion = passwordSesion;
+
     }
 
     @Override

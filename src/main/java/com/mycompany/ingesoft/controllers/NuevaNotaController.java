@@ -4,9 +4,10 @@ import com.mycompany.ingesoft.controllers.clases.singleton;
 import com.mycompany.ingesoft.dao.ClaseDAO;
 import com.mycompany.ingesoft.dao.Conexion;
 import com.mycompany.ingesoft.models.Empresa;
+import com.mycompany.ingesoft.models.Recurso;
 import com.mycompany.ingesoft.models.Sucursal;
 import com.mycompany.ingesoft.models.TipoRecurso;
-import com.mycompany.ingesoft.models.Recurso;
+
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;

@@ -19,13 +19,29 @@ public class singleton {
     
     
     private int id_sucursal; 
+
+
+    private String nombreSucursal; 
+    private Recurso recurso;
+    private int Id_recurso;
+
+    public int getId_recurso() {
+        return Id_recurso;
+    }
+
+    public void setId_recurso(int Id_recurso) {
+        this.Id_recurso = Id_recurso;
+    }
+
+
     
     
     private boolean editado; 
     private String nombreEmpresa; 
     private Empresa empresa; 
     private Sucursal sucursal; 
-    private Recurso recurso; 
+
+    
     
    
     
@@ -62,7 +78,20 @@ public class singleton {
 
     public void setEditado(boolean editado) {
         this.editado = editado;
+
     }
+
+   
+
+    
+
+    public void setNombreSucursal(String nombreSucursal) {
+        this.nombreSucursal = nombreSucursal;
+
+    }
+    
+
+
 
    
 
