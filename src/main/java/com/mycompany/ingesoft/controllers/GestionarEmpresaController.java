@@ -51,6 +51,13 @@ public class GestionarEmpresaController implements Initializable {
     private ClaseDAO dao = new ClaseDAO(conexion.getCon()); 
     private List<Empresa> empresas = new ArrayList(); 
     
+    
+    private ModalListener listener;
+
+    public void setListener(ModalListener listener){
+        this.listener = listener;
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
@@ -84,6 +91,8 @@ public class GestionarEmpresaController implements Initializable {
         }
     }
     
+    
+    
     private HBox crearTarjetaEmpresa(Empresa empresa) {
         HBox cardContainer = new HBox();
         cardContainer.getStyleClass().add("card-container");
@@ -109,6 +118,15 @@ public class GestionarEmpresaController implements Initializable {
         editarBtn.setOnMouseClicked((MouseEvent event) -> {
             singleton.getInstancia().setId_empresa(empresa.getIdEmpresa());
             singleton.getInstancia().setNombreEmpresa(empresa.getDescripcion());
+            singleton.getInstancia().setEditado(true);
+            abrirVentana("nuevaEmpresa", "Editar nombre de empresa", () ->{
+                try {
+                        actualizarEmpresas();
+                } catch (SQLException ex) {
+                        Logger.getLogger(GestionarEmpresaController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+            
             // lógica de edición
         });
         
@@ -117,12 +135,23 @@ public class GestionarEmpresaController implements Initializable {
             singleton.getInstancia().setId_empresa(empresa.getIdEmpresa());
             singleton.getInstancia().setNombreEmpresa(empresa.getDescripcion());
 
-            abrirVentana("eliminarEmpresa", "Eliminación de empresa", () -> recargarEmpresas());
+            abrirVentana("eliminarEmpresa", "Eliminación de empresa", () -> {
+                try {
+                    actualizarEmpresas();
+                } catch (SQLException ex) {
+                    Logger.getLogger(GestionarEmpresaController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
         });
         
         accionesContainer.getChildren().addAll(editarBtn, eliminarBtn);
         cardContainer.getChildren().addAll(nombreContainer, spacer, accionesContainer);
         return cardContainer;
+    }
+    private void actualizarEmpresas() throws SQLException{
+        empresas = dao.obtenerEmpresas(); 
+        cargarEmpresas();
+        
     }
 
     private void abrirVentana(String fxmlFileName, String titulo, ModalListener listener) {
@@ -133,9 +162,11 @@ public class GestionarEmpresaController implements Initializable {
             Parent root = loader.load();
 
             Object controller = loader.getController();
-            if (controller instanceof EliminarEmpresaController) {
-                ((EliminarEmpresaController) controller).setListener(listener);
-            }
+                if (controller instanceof EliminarEmpresaController) {
+                    ((EliminarEmpresaController) controller).setListener(listener);
+                } else if (controller instanceof NuevaEmpresaController) {
+                    ((NuevaEmpresaController) controller).setListener(listener);
+                }
 
             Stage stage = new Stage();
             stage.setTitle(titulo);

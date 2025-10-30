@@ -11,4 +11,5 @@ package com.mycompany.ingesoft.interfaces;
 public interface ModalListener {
     void onDataChanged();
     
+    
 }

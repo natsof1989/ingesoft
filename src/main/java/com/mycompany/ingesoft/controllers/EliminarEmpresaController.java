@@ -27,6 +27,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -60,6 +61,9 @@ public class EliminarEmpresaController implements Initializable {
     private Conexion conexion = new Conexion(); 
     private ClaseDAO dao = new ClaseDAO(conexion.getCon()); 
     private ModalListener listener;
+    @FXML
+    private Label txt_nameEmpresa;
+    
 
     public void setListener(ModalListener listener) {
         this.listener = listener;
@@ -95,8 +99,6 @@ public class EliminarEmpresaController implements Initializable {
         ControladorUtils.cerrarModal((Node) event.getSource());
     }
      
-    @FXML
-    
     private void eliminarEmpresa(ActionEvent event) throws SQLException {
         ControladorUtils.mostrarWarning("Aviso", "Al eliminar una empresa se eliminan también todos los datos "
                 + "relacionados a esa empresa (sucursales y recursos). Esta acción no se puede deshacer. ");
@@ -144,5 +146,5 @@ public class EliminarEmpresaController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == buttonTypeYes;
     }
-    
+
 }

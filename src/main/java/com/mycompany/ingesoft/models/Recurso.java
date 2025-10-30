@@ -34,6 +34,7 @@ public class Recurso {
         this.inicioSesion = false;
     }
 
+
     public Recurso(Integer idRecurso, Integer idEmpresa, Integer idSucursal, Integer idTipoRecurso, String titulo, String usuario, String contrasena, String ip, String nota, Boolean inicioSesion, String anydesk, String usuarioSesion, String passwordSesion, String nombreEmpresa, String nombreSucursal, String nombreTipoRecurso) {
         this.idRecurso = idRecurso;
         this.idEmpresa = idEmpresa;
@@ -51,6 +52,15 @@ public class Recurso {
         this.nombreEmpresa = nombreEmpresa;
         this.nombreSucursal = nombreSucursal;
         this.nombreTipoRecurso = nombreTipoRecurso;
+    }
+   
+    
+    
+
+    // Getters y Setters
+    public Integer getIdRecurso() {
+        return idRecurso;
+
     }
 
 
@@ -72,11 +82,7 @@ public class Recurso {
         this.contrasena = password; // Asignamos al mismo campo
     }
     
-    // Getters y Setters principales
-    public int getIdRecurso() {
-        return idRecurso; 
-    }
-
+   
     // Getters y Setters
     
 

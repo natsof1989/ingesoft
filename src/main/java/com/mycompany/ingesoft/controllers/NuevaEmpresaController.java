@@ -1,7 +1,10 @@
 package com.mycompany.ingesoft.controllers;
 
+import com.mycompany.ingesoft.controllers.clases.ControladorUtils;
+import com.mycompany.ingesoft.controllers.clases.singleton;
 import com.mycompany.ingesoft.dao.ClaseDAO;
 import com.mycompany.ingesoft.dao.Conexion;
+import com.mycompany.ingesoft.interfaces.ModalListener;
 import com.mycompany.ingesoft.models.Empresa;
 import java.net.URL;
 import java.sql.SQLException;
@@ -29,17 +32,28 @@ public class NuevaEmpresaController implements Initializable {
     private Button btn_cancelar;
     @FXML
     private Button btn_guardar;
-    
-    private ClaseDAO dao;
-    private Conexion conexion;
+    private Conexion conexion = new Conexion();
+    private ClaseDAO dao; 
+    private ModalListener listener;
+
+    public void setListener(ModalListener listener){
+        this.listener = listener;
+    }
+
     
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        conexion = new Conexion();
+        
         dao = new ClaseDAO(conexion.getCon());
+        
+         if(singleton.getInstancia().isEditado()){
+            txt_nombreEmpresa.setText(singleton.getInstancia().getNombreEmpresa());
+            btn_guardar.setText("Actualizar");
+            
+        }
     }    
     
     @FXML
@@ -49,14 +63,36 @@ public class NuevaEmpresaController implements Initializable {
     }
 
     @FXML
-    private void guardar(ActionEvent event) {
+    private void guardar(ActionEvent event) throws SQLException {
+        
+       
         String nombreEmpresa = txt_nombreEmpresa.getText().trim();
         
         if (nombreEmpresa.isEmpty()) {
             mostrarAlerta("Error", "El nombre de la empresa no puede estar vacío", Alert.AlertType.ERROR);
             return;
         }
-        
+        if(singleton.getInstancia().isEditado()){
+            try {
+                String nameEmpresa = txt_nombreEmpresa.getText(); 
+                int idEmpresa = singleton.getInstancia().getId_empresa(); 
+                if(dao.actualizarEmpresa(nameEmpresa, idEmpresa)){
+                    ControladorUtils.mostrarAlertaChill("Actualización éxitosa", "La actualización realizada");
+                    Stage stage = (Stage) btn_guardar.getScene().getWindow();
+                    stage.close();
+                    singleton.getInstancia().setEditado(false);
+                     if (listener != null) {
+                            listener.onDataChanged();
+                        }
+                } else {
+                    ControladorUtils.mostrarAlertaError("Error", "No se pudo realizar la actualización");
+                }
+            } catch(SQLException ex){
+                ControladorUtils.mostrarAlertaError("Error SQL", ex.getMessage());
+            }
+            return;
+        }
+
         try {
             Empresa nuevaEmpresa = new Empresa();
             nuevaEmpresa.setDescripcion(nombreEmpresa);

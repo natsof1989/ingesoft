@@ -7,6 +7,8 @@ import com.mycompany.ingesoft.models.Recurso;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClaseDAO {
     private final Connection conexion;
@@ -57,6 +59,8 @@ public class ClaseDAO {
             return filasAfectadas>0; 
         }
     }
+    
+    
 
     
     public List<Sucursal> obtenerSucursalesValidacion(int idEmpresa) throws SQLException {
@@ -78,16 +82,21 @@ public class ClaseDAO {
         return sucursales;
     }
     
-   public List<Sucursal> obtenerSucursalesObjetos() throws SQLException {
+   
+   
+   public List<Sucursal> obtenerSucursalesObjetosIds() throws SQLException {
         List<Sucursal> sucursales = new ArrayList<>();
         String sql = """
             SELECT 
-                s.descripcion AS sucursal_desc,
-                s.direccion AS direccion,
-                e.descripcion AS empresa_desc
-            FROM sucursales s
-            INNER JOIN empresa e ON s.id_empresa = e.id_empresa
-            ORDER BY e.descripcion, s.descripcion
+            		s.id_sucursal AS id_sucursal,
+                            s.id_empresa AS id_empresa,
+                            s.descripcion AS sucursal_desc,
+                            s.direccion AS direccion,
+                            s.telefono as telefono,
+                            e.descripcion AS empresa_desc
+                        FROM sucursales s
+                        INNER JOIN empresa e ON s.id_empresa = e.id_empresa
+                        ORDER BY e.descripcion, s.descripcion
             """;
 
         try (PreparedStatement ps = conexion.prepareStatement(sql);
@@ -98,6 +107,9 @@ public class ClaseDAO {
                 sucur.setDescripcion(rs.getString("sucursal_desc"));
                 sucur.setDireccion(rs.getString("direccion"));
                 sucur.setNombreEmpresa(rs.getString("empresa_desc"));
+                sucur.setIdSucursal(rs.getInt("id_sucursal"));
+                sucur.setIdEmpresa(rs.getInt("id_empresa"));
+                sucur.setTelefono(rs.getString("telefono"));
                 sucursales.add(sucur);
             }
         }
@@ -193,6 +205,8 @@ public class ClaseDAO {
         }
         return recursos;
     }
+    
+    
    
 
 
@@ -258,9 +272,9 @@ public class ClaseDAO {
     }
 
 // Método auxiliar
-private boolean esVacio(String valor) {
-    return valor == null || valor.trim().isEmpty();
-}
+    private boolean esVacio(String valor) {
+        return valor == null || valor.trim().isEmpty();
+    }
 
 
     // ================== NUEVOS MÉTODOS (para el controller) ==================
@@ -329,6 +343,33 @@ private boolean esVacio(String valor) {
             }
         }
     }
+    
+    public boolean actualizarEmpresa(String nombreEmpresa, int idEmpresa) throws SQLException{
+        //UPDATE `ingesoft`.`empresa` SET `descripcion` = 'Empresa ejemplo2024' WHERE (`id_empresa` = '3');
+        String sql = "update empresa set descripcion = ? where id_empresa = ?"; 
+        try(PreparedStatement ps = conexion.prepareStatement(sql)){
+            ps.setString(1, nombreEmpresa);
+            ps.setInt(2, idEmpresa);
+            int filasAfectadas = ps.executeUpdate(); 
+            
+            return filasAfectadas>0; 
+        }
+    }
+    public boolean actualizarSucursal(Sucursal sucursal) {
+    String sql = "UPDATE sucursales SET descripcion=?, id_empresa=?, direccion=?, telefono=? WHERE id_sucursal=?";
+    try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+        ps.setString(1, sucursal.getDescripcion());
+        ps.setInt(2, sucursal.getIdEmpresa());
+        ps.setString(3, sucursal.getDireccion());
+        ps.setString(4, sucursal.getTelefono());
+        ps.setInt(5, sucursal.getIdSucursal());
+
+        int filasAfectadas = ps.executeUpdate();
+        return filasAfectadas > 0;
+    } catch (SQLException e) {
+        return false; // siempre retornamos algo seguro
+    }
+}///Acá
 
 
     // ================== MÉTODO AUXILIAR ==================
@@ -433,9 +474,61 @@ private boolean esVacio(String valor) {
                 return lista;
             }
         }
+
     }   
 
-    public Recurso obtenerRecursoPorId(int idRecurso) throws SQLException {
+        
+        
+    
+        public List<Recurso> obtenerRecursosValidacion(int idSucursal) throws SQLException{
+            List<Recurso> lista = new ArrayList<>();
+            String sql = "select id_recurso, titulo from recurso where id_sucursal=?";
+            try(PreparedStatement ps = conexion.prepareStatement(sql)){
+                ps.setInt(1, idSucursal);
+                try(ResultSet rs = ps.executeQuery()){
+                    
+                     while (rs.next()) {
+                        Recurso recurso = new Recurso();
+                        recurso.setIdRecurso(rs.getInt("id_recurso"));
+                        recurso.setTitulo(rs.getString("titulo"));
+                        lista.add(recurso);
+                        }
+                    
+                }
+            }
+            return lista; 
+        }
+        
+        
+        // ================== TIPOS DE RECURSO POR SUCURSAL ==================
+    /*public List<TipoRecurso> obtenerTiposRecursoPorSucursal(int idSucursal) {
+        List<TipoRecurso> tipos = new ArrayList<>();
+        String sql = """
+            SELECT DISTINCT tr.id_tipo_recurso, tr.descripcion
+            FROM recurso r
+            JOIN tipo_recurso tr ON r.id_tipo_recurso = tr.id_tipo_recurso
+            WHERE r.id_sucursal = ?
+            ORDER BY tr.descripcion
+        """;
+
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idSucursal);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    TipoRecurso tipo = new TipoRecurso();
+                    tipo.setIdTipoRecurso(rs.getInt("id_tipo_recurso"));
+                    tipo.setDescripcion(rs.getString("descripcion"));
+                    tipos.add(tipo);
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ClaseDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return tipos;
+    }*/
+
+    public Recurso obtenerRecursoPorId(int idRecurso) throws SQLException{
         String sql = """
             SELECT r.*, 
                    e.descripcion AS empresa_desc, 

@@ -54,7 +54,9 @@ public class NuevaNotaController implements Initializable {
     private TextField txt_usuario_sesion;
     @FXML
     private TextField txt_password_sesion;
-
+    
+    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         conexion = new Conexion();
@@ -71,7 +73,7 @@ public class NuevaNotaController implements Initializable {
             }
         });
         
-        
+       
         
         
     }
@@ -165,7 +167,6 @@ public class NuevaNotaController implements Initializable {
             }
             
 
-            
             if (sucursalSeleccionada != null) {
                 recurso.setIdSucursal(sucursalSeleccionada.getIdSucursal());
             } else {
