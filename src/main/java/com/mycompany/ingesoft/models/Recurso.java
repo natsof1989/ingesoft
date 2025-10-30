@@ -28,6 +28,10 @@ public class Recurso {
         this.inicioSesion = false;
     }
 
+   
+    
+    
+
     // Getters y Setters
     public Integer getIdRecurso() {
         return idRecurso;

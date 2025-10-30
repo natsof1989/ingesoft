@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextInputControl;
 import javafx.stage.Stage;
 
 /**
@@ -59,7 +60,14 @@ public class ControladorUtils {
         Stage stage = (Stage) node.getScene().getWindow();
         stage.close();
     }
-    
+     public static boolean hayCamposVacios(TextInputControl... campos) {
+        for (TextInputControl campo : campos) {
+            if (campo.getText() == null || campo.getText().trim().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     
 }

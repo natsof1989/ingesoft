@@ -74,6 +74,8 @@ public class PrimaryController implements Initializable {
     private int idEmpresaSelected = 0; 
     private int idSucursalSelected = 0; 
     private int idTipoRecursoSelected = 0; 
+    @FXML
+    private MenuItem btn_gestionarRecursos;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -555,5 +557,7 @@ public class PrimaryController implements Initializable {
 
     @FXML
     private void tipoRecurso(ActionEvent event) {
+        
+        
     }
 }
