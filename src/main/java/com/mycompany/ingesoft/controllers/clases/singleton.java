@@ -7,6 +7,7 @@ package com.mycompany.ingesoft.controllers.clases;
 import com.mycompany.ingesoft.models.Empresa;
 import com.mycompany.ingesoft.models.Recurso;
 import com.mycompany.ingesoft.models.Sucursal;
+import com.mycompany.ingesoft.models.TipoRecurso;
 
 /**
  *
@@ -16,15 +17,18 @@ public class singleton {
     private static singleton instancia; 
     
     private int id_empresa; 
-    
-    
     private int id_sucursal; 
-
-
     private String nombreSucursal; 
     private Recurso recurso;
     private int Id_recurso;
+    private boolean editado; 
+    private String nombreEmpresa; 
+    private Empresa empresa; 
+    private Sucursal sucursal; 
+    
+    private TipoRecurso tipo; 
 
+    
     public int getId_recurso() {
         return Id_recurso;
     }
@@ -33,15 +37,13 @@ public class singleton {
         this.Id_recurso = Id_recurso;
     }
 
+    public TipoRecurso getTipo() {
+        return tipo;
+    }
 
-    
-    
-    private boolean editado; 
-    private String nombreEmpresa; 
-    private Empresa empresa; 
-    private Sucursal sucursal; 
-
-    
+    public void setTipo(TipoRecurso tipo) {
+        this.tipo = tipo;
+    }
     
    
     

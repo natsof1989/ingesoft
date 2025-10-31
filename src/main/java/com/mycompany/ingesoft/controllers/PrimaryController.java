@@ -69,8 +69,6 @@ public class PrimaryController implements Initializable {
     private MenuItem btn_nuevoRecurso;
     @FXML
     private MenuItem btn_nuevaNota;
-    @FXML
-    private MenuItem btn_gestionarRecursos;
 
     private ClaseDAO dao;
     private Conexion conexion;
@@ -79,6 +77,8 @@ public class PrimaryController implements Initializable {
     private int idEmpresaSelected = 0; 
     private int idSucursalSelected = 0; 
     private int idTipoRecursoSelected = 0; 
+    @FXML
+    private MenuItem btn_gestionarTiposRecursos;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -611,5 +611,10 @@ public class PrimaryController implements Initializable {
     @FXML
     private void tipoRecurso(ActionEvent event) {
         extraerDatos(event);
+    }
+
+    @FXML
+    private void gestionarTiposRecursos(ActionEvent event) {
+        abrirVentana("gestionarRecurso", "Gestión de tipo de recursos");
     }
 }

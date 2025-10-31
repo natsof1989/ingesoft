@@ -124,27 +124,6 @@ public class EliminarEmpresaController implements Initializable {
         }
     }
 
-    public void mostrarWarning(String titulo, String mensaje){
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(titulo);
-        alert.setHeaderText("Aviso");  // Esto elimina el "Message" por defecto
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
-     public static boolean mostrarConfirmacion(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-
-        // Personalizar botones (opcional)
-        ButtonType buttonTypeYes = new ButtonType("Sí", ButtonBar.ButtonData.YES);
-        ButtonType buttonTypeNo = new ButtonType("No", ButtonBar.ButtonData.NO);
-        alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
-
-        // Mostrar diálogo y esperar respuesta
-        Optional<ButtonType> result = alert.showAndWait();
-        return result.isPresent() && result.get() == buttonTypeYes;
-    }
+   
 
 }

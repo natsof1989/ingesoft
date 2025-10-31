@@ -1,7 +1,10 @@
 package com.mycompany.ingesoft.controllers;
 
+import com.mycompany.ingesoft.controllers.clases.ControladorUtils;
+import com.mycompany.ingesoft.controllers.clases.singleton;
 import com.mycompany.ingesoft.dao.ClaseDAO;
 import com.mycompany.ingesoft.dao.Conexion;
+import com.mycompany.ingesoft.interfaces.ModalListener;
 import com.mycompany.ingesoft.models.TipoRecurso;
 import java.net.URL;
 import java.sql.SQLException;
@@ -27,11 +30,22 @@ public class NuevoRecursoController implements Initializable {
 
     private ClaseDAO dao;
     private Conexion conexion;
+    private ModalListener listener;
+
+    public void setListener(ModalListener listener){
+        this.listener = listener;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         conexion = new Conexion();
         dao = new ClaseDAO(conexion.getCon());
+        
+        if(singleton.getInstancia().isEditado()){
+            String name = singleton.getInstancia().getTipo().getDescripcion(); 
+            txt_nuevoRecurso.setText(name);
+            btn_guardar.setText("Actualizar");
+        }
     }    
 
     @FXML
@@ -47,6 +61,27 @@ public class NuevoRecursoController implements Initializable {
         if (nombreRecurso.isEmpty()) {
             mostrarAlerta("Error", "El nombre del recurso no puede estar vacío", Alert.AlertType.ERROR);
             return;
+        }
+        if(singleton.getInstancia().isEditado()){
+            try{
+                String name = txt_nuevoRecurso.getText(); 
+                int id = singleton.getInstancia().getTipo().getIdTipoRecurso(); 
+                if(dao.actualizarTipoRecurso(name, id)){
+                    ControladorUtils.mostrarAlertaChill("Actualización éxitosa", "La actualización realizada");
+                    Stage stage = (Stage) btn_guardar.getScene().getWindow();
+                    stage.close();
+                    singleton.getInstancia().setEditado(false);
+                     if (listener != null) {
+                            listener.onDataChanged();
+                        }
+                } else{
+                    ControladorUtils.mostrarAlertaError("Error", "No se pudo realizar la actualización");
+                }
+            } catch(SQLException ex){
+                      ControladorUtils.mostrarAlertaError("Error SQL", ex.getMessage());  
+              
+            }
+            return; 
         }
 
         try {

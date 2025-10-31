@@ -41,7 +41,7 @@
                         <MenuItem fx:id="btn_nuevoRecurso" mnemonicParsing="false" onAction="#nuevoRecurso" text="Nuevo tipo recurso" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="btn_gestionarEmpresas" mnemonicParsing="false" onAction="#gestionarEmpresas" text="Gestionar empresas" />
-                        <MenuItem fx:id="btn_gestionarRecursos" mnemonicParsing="false" text="Gestionar Recurso" />
+                        <MenuItem fx:id="btn_gestionarTiposRecursos" mnemonicParsing="false" onAction="#gestionarTiposRecursos" text="Gestionar Tipo recurso" />
                         <MenuItem fx:id="btn_gestionarSucursales" mnemonicParsing="false" onAction="#gestionarSucursales" text="Gestionar sucursales" />
                     </items>
                   </SplitMenuButton>

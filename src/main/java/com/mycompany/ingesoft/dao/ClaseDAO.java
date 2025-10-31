@@ -42,6 +42,15 @@ public class ClaseDAO {
             return filasAfectadas > 0;
         }
     }
+    
+    public boolean eliminarTipoRecurso(int idTipoRecurso) throws SQLException {
+        String sql = "DELETE FROM tipo_recurso WHERE id_tipo_recurso = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idTipoRecurso);
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+        }
+    }
 
     public boolean eliminarSucursal(int idSucursal) throws SQLException {
         String sql = "DELETE FROM sucursales WHERE id_sucursal = ?";
@@ -340,6 +349,15 @@ public class ClaseDAO {
             return filasAfectadas > 0; 
         }
     }
+    public boolean actualizarTipoRecurso(String tipoRecurso, int idTipoRecurso) throws SQLException {
+        String sql = "UPDATE tipo_recurso set descripcion=? where id_tipo_recurso=?"; 
+        try(PreparedStatement ps = conexion.prepareStatement(sql)){
+            ps.setString(1, tipoRecurso);
+            ps.setInt(2, idTipoRecurso);
+            int filasAfectadas = ps.executeUpdate(); 
+            return filasAfectadas > 0; 
+        }
+    }
     
     public boolean actualizarSucursal(Sucursal sucursal) throws SQLException {
         String sql = "UPDATE sucursales SET descripcion=?, id_empresa=?, direccion=?, telefono=? WHERE id_sucursal=?";
@@ -403,7 +421,7 @@ public class ClaseDAO {
         return tipos;
     }
 
-    public boolean actualizarRecurso(Recurso recurso) throws SQLException {
+    public boolean actualizarRecurso(Recurso recurso){
         String sql = """
             UPDATE recurso 
             SET titulo = ?, ip = ?, anydesk = ?, nota = ?, usuario = ?, contrasena = ?, 
@@ -433,6 +451,9 @@ public class ClaseDAO {
             ps.setInt(12, recurso.getIdRecurso());
 
             return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(ClaseDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false; 
         }
     }
     

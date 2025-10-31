@@ -3,6 +3,7 @@ package com.mycompany.ingesoft.models;
 public class TipoRecurso {
     private int idTipoRecurso;
     private String descripcion;
+    
 
     // Getters y Setters
     public int getIdTipoRecurso() {
