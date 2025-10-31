@@ -8,6 +8,9 @@ import com.mycompany.ingesoft.dao.ClaseDAO;
 import com.mycompany.ingesoft.dao.Conexion;
 import com.mycompany.ingesoft.models.Sucursal;
 import com.mycompany.ingesoft.controllers.clases.singleton;
+import com.mycompany.ingesoft.interfaces.ModalListener;
+import com.mycompany.ingesoft.models.Empresa;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,10 +19,12 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -29,6 +34,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -44,10 +51,23 @@ public class GestionarSucursalController implements Initializable {
     private ClaseDAO dao = new ClaseDAO(conexion.getCon()); 
     private List<Sucursal> sucursales = new ArrayList(); 
     
+    private ModalListener listener;
+
+    public void setListener(ModalListener listener){
+        this.listener = listener;
+    }
+    
+    private void recargarSucursales() throws SQLException{
+            sucursales.clear();
+            sucursales.addAll(dao.obtenerSucursalesObjetosIds()); 
+            cargarSucursales();
+         
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            sucursales.addAll(dao.obtenerSucursalesObjetos());
+            sucursales.addAll(dao.obtenerSucursalesObjetosIds());
             cargarSucursales();
         } catch (SQLException ex) {
             Logger.getLogger(GestionarSucursalController.class.getName()).log(Level.SEVERE, null, ex);
@@ -55,6 +75,7 @@ public class GestionarSucursalController implements Initializable {
     }    
     
     private void cargarSucursales() {
+        
         contenedorVbox.getChildren().clear();
         contenedorVbox.setSpacing(10);
         
@@ -102,17 +123,41 @@ public class GestionarSucursalController implements Initializable {
         // Botón de editar
         StackPane editarBtn = crearBotonIcono("M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z", "#2196F3");
         editarBtn.setOnMouseClicked((MouseEvent event) -> {
-            singleton.getInstancia().setId_sucursal(sucursal.getIdSucursal());
-            // Aquí puedes agregar la lógica para navegar a la vista de edición
-            System.out.println("Editar sucursal con ID: " + sucursal.getIdSucursal());
+            // CORRECCIÓN: Limpiar el singleton antes de usarlo
+            singleton.getInstancia().reset();
+            
+            // Establecer que estamos en modo edición
+            singleton.getInstancia().setEditado(true);
+            singleton.getInstancia().setSucursal(sucursal);
+            
+            // Crear objeto empresa con los datos necesarios
+            Empresa empresa = new Empresa(sucursal.getIdEmpresa(), sucursal.getNombreEmpresa()); 
+            singleton.getInstancia().setEmpresa(empresa);
+            
+            // CORRECCIÓN: El listener debe recargar los datos después de cerrar la ventana de edición
+            abrirVentana("nuevaSucursal", "Editar sucursal", () -> {
+                try {
+                    recargarSucursales();
+                } catch (SQLException ex) {
+                    Logger.getLogger(GestionarSucursalController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
         });
         
         // Botón de eliminar
         StackPane eliminarBtn = crearBotonIcono("M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z", "#F44336");
         eliminarBtn.setOnMouseClicked((MouseEvent event) -> {
+            singleton.getInstancia().setSucursal(sucursal);
             singleton.getInstancia().setId_sucursal(sucursal.getIdSucursal());
             // Aquí puedes agregar la lógica para eliminar la sucursal
-            System.out.println("Eliminar sucursal con ID: " + sucursal.getIdSucursal());
+            abrirVentana("eliminarSucursal", "Eliminar una sucursal", ()->
+            {
+                try {
+                    actualizarSucursales();
+                } catch (SQLException ex) {
+                    Logger.getLogger(GestionarSucursalController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
         });
         
         accionesContainer.getChildren().addAll(editarBtn, eliminarBtn);
@@ -123,11 +168,17 @@ public class GestionarSucursalController implements Initializable {
         return cardContainer;
     }
     
+    private void actualizarSucursales() throws SQLException{
+        sucursales = dao.obtenerSucursalesObjetosIds();
+        cargarSucursales();
+    }
+    
     private StackPane crearBotonIcono(String svgPath, String color) {
         StackPane buttonContainer = new StackPane();
         buttonContainer.setPrefSize(40, 40);
         buttonContainer.setStyle("-fx-background-color: " + color + "22; -fx-background-radius: 50;");
         buttonContainer.setAlignment(Pos.CENTER);
+        
         
         SVGPath icon = new SVGPath();
         icon.setContent(svgPath);
@@ -146,5 +197,30 @@ public class GestionarSucursalController implements Initializable {
         });
         
         return buttonContainer;
+    }
+    
+     private void abrirVentana(String fxmlFileName, String titulo, ModalListener listener) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/com/mycompany/ingesoft/fxml/" + fxmlFileName + ".fxml"
+            ));
+            Parent root = loader.load();
+
+            Object controller = loader.getController();
+                if (controller instanceof EliminarSucursalController) {
+                    ((EliminarSucursalController) controller).setListener(listener);
+                } else if (controller instanceof NuevaSucursalController) {
+                    ((NuevaSucursalController) controller).setListener(listener);
+                }
+
+            Stage stage = new Stage();
+            stage.setTitle(titulo);
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarEmpresaController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

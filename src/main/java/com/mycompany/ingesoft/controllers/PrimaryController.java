@@ -1,5 +1,5 @@
 package com.mycompany.ingesoft.controllers;
-//fwsdd
+
 import com.mycompany.ingesoft.controllers.clases.singleton;
 import com.mycompany.ingesoft.dao.ClaseDAO;
 import com.mycompany.ingesoft.dao.Conexion;
@@ -73,6 +73,12 @@ public class PrimaryController implements Initializable {
     private ClaseDAO dao;
     private Conexion conexion;
     private int currentColumns = 4;
+    
+    private int idEmpresaSelected = 0; 
+    private int idSucursalSelected = 0; 
+    private int idTipoRecursoSelected = 0; 
+    @FXML
+    private MenuItem btn_gestionarTiposRecursos;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -81,6 +87,7 @@ public class PrimaryController implements Initializable {
 
         // Cargar solo empresas al inicio
         cargarEmpresas();
+        cargarTiposRecurso();
         cargarTodosLosRecursos();
 
         // Deshabilitar combos dependientes al inicio
@@ -99,8 +106,8 @@ public class PrimaryController implements Initializable {
         // Listeners en cascada
         cmb_empresas.setOnAction(this::habilitarSucursales);   // Empresa → habilita sucursal
         cmb_sucursal.setOnAction(this::extraerDatos); // Sucursal → habilita tipo recurso
+        cmb_tipoRecurso.setOnAction(e -> extraerDatos(null));
         
-
         // Ajuste dinámico de columnas en el grid
         contenedor_gridpane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -212,31 +219,32 @@ public class PrimaryController implements Initializable {
 
     // Header con título y menú
     HBox headerBox = new HBox();
-    headerBox.setAlignment(javafx.geometry.Pos.CENTER);
+    headerBox.setAlignment(Pos.CENTER);
 
     Label lblTitulo = new Label(recurso.getTitulo());
     lblTitulo.getStyleClass().add("card-title");
     lblTitulo.setWrapText(true);
-    lblTitulo.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
+    lblTitulo.setAlignment(Pos.CENTER_RIGHT);
     HBox.setHgrow(lblTitulo, javafx.scene.layout.Priority.ALWAYS);
 
     MenuButton menuAcciones = new MenuButton("⋮");
     menuAcciones.getStyleClass().add("menu-button-card");
-    menuAcciones.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+    menuAcciones.setAlignment(Pos.CENTER_LEFT);
 
     MenuItem itemEditar = new MenuItem("Editar");
     itemEditar.setOnAction(e -> editarRecurso(recurso));
-
+    
     MenuItem itemEliminar = new MenuItem("Eliminar");
     itemEliminar.setOnAction(e -> eliminarRecurso(recurso));
 
     menuAcciones.getItems().addAll(itemEditar, itemEliminar);
+
     headerBox.getChildren().addAll(lblTitulo, menuAcciones);
     card.getChildren().add(headerBox);
 
     // Empresa y sucursal
     HBox empresaSucursalBox = new HBox(8);
-    empresaSucursalBox.setAlignment(javafx.geometry.Pos.CENTER);
+    empresaSucursalBox.setAlignment(Pos.CENTER);
 
     Label lblEmpresa = new Label(recurso.getNombreEmpresa() != null ? recurso.getNombreEmpresa() : "Sin empresa");
     lblEmpresa.getStyleClass().add("card-empresa");
@@ -256,8 +264,8 @@ public class PrimaryController implements Initializable {
     card.getChildren().add(empresaSucursalBox);
 
     // Tipo de recurso
-    if (recurso.getNombreTipo() != null && !recurso.getNombreTipo().trim().isEmpty()) {
-        Label lblTipoRecurso = new Label(recurso.getNombreTipo());
+    if (recurso.getNombreTipoRecurso() != null && !recurso.getNombreTipoRecurso().trim().isEmpty()) {
+        Label lblTipoRecurso = new Label(recurso.getNombreTipoRecurso());
         lblTipoRecurso.getStyleClass().add("server-badge");
         card.getChildren().add(lblTipoRecurso);
     }
@@ -274,7 +282,7 @@ public class PrimaryController implements Initializable {
     if (recurso.getIp() != null && !recurso.getIp().trim().isEmpty()) {
         HBox ipBox = new HBox(8);
         ipBox.getStyleClass().add("info-row");
-        ipBox.setAlignment(javafx.geometry.Pos.CENTER);
+        ipBox.setAlignment(Pos.CENTER);
 
         Label lblIpIcon = new Label("🌐");
         Label lblIp = new Label(recurso.getIp());
@@ -292,7 +300,7 @@ public class PrimaryController implements Initializable {
     if (recurso.getAnydesk() != null && !recurso.getAnydesk().trim().isEmpty()) {
         HBox anydeskBox = new HBox(8);
         anydeskBox.getStyleClass().add("info-row");
-        anydeskBox.setAlignment(javafx.geometry.Pos.CENTER);
+        anydeskBox.setAlignment(Pos.CENTER);
 
         Label lblAnydeskIcon = new Label("🖥️");
         Label lblAnydesk = new Label(recurso.getAnydesk());
@@ -339,7 +347,7 @@ public class PrimaryController implements Initializable {
         // Usuario
         HBox usuarioBox = new HBox(10);
         usuarioBox.getStyleClass().add("credential-row");
-        usuarioBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        usuarioBox.setAlignment(Pos.CENTER_LEFT);
 
         VBox userLabelBox = new VBox(2);
         Label lblUserLabel = new Label("USUARIO");
@@ -351,7 +359,7 @@ public class PrimaryController implements Initializable {
 
         Label lblUsuario = new Label(recurso.getUsuario());
         lblUsuario.getStyleClass().add("credential-value");
-        javafx.scene.layout.HBox.setHgrow(lblUsuario, javafx.scene.layout.Priority.ALWAYS);
+        HBox.setHgrow(lblUsuario, javafx.scene.layout.Priority.ALWAYS);
 
         Button btnCopiarUsuario = new Button();
         btnCopiarUsuario.getStyleClass().add("copy-button");
@@ -366,7 +374,7 @@ public class PrimaryController implements Initializable {
         if (recurso.getContrasena() != null && !recurso.getContrasena().trim().isEmpty()) {
             HBox passwordBox = new HBox(10);
             passwordBox.getStyleClass().add("credential-row");
-            passwordBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+            passwordBox.setAlignment(Pos.CENTER_LEFT);
 
             VBox passLabelBox = new VBox(2);
             Label lblPassLabel = new Label("CONTRASEÑA");
@@ -378,7 +386,7 @@ public class PrimaryController implements Initializable {
 
             Label lblPassword = new Label("••••••••");
             lblPassword.getStyleClass().add("credential-password");
-            javafx.scene.layout.HBox.setHgrow(lblPassword, javafx.scene.layout.Priority.ALWAYS);
+            HBox.setHgrow(lblPassword, javafx.scene.layout.Priority.ALWAYS);
 
             Button btnCopiarPassword = new Button();
             btnCopiarPassword.getStyleClass().add("copy-button");
@@ -690,5 +698,10 @@ public class PrimaryController implements Initializable {
     @FXML
     private void tipoRecurso(ActionEvent event) {
         extraerDatos(event);
+    }
+
+    @FXML
+    private void gestionarTiposRecursos(ActionEvent event) {
+        abrirVentana("gestionarRecurso", "Gestión de tipo de recursos");
     }
 }

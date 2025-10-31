@@ -1,11 +1,13 @@
 package com.mycompany.ingesoft.controllers;
 
+import com.mycompany.ingesoft.controllers.clases.singleton;
 import com.mycompany.ingesoft.dao.ClaseDAO;
 import com.mycompany.ingesoft.dao.Conexion;
 import com.mycompany.ingesoft.models.Empresa;
+import com.mycompany.ingesoft.models.Recurso;
 import com.mycompany.ingesoft.models.Sucursal;
 import com.mycompany.ingesoft.models.TipoRecurso;
-import com.mycompany.ingesoft.models.Recurso;
+
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
@@ -53,7 +55,9 @@ public class NuevaNotaController implements Initializable {
     private TextField txt_usuario_sesion;
     @FXML
     private TextField txt_password_sesion;
-
+    
+    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         conexion = new Conexion();
@@ -69,6 +73,10 @@ public class NuevaNotaController implements Initializable {
                 cmb_sucursales.getItems().clear();
             }
         });
+        
+       
+        
+        
     }
 
     private void cargarEmpresas() {
@@ -160,7 +168,6 @@ public class NuevaNotaController implements Initializable {
             }
             
 
-            
             if (sucursalSeleccionada != null) {
                 recurso.setIdSucursal(sucursalSeleccionada.getIdSucursal());
             } else {

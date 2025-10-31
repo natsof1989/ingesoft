@@ -4,13 +4,12 @@
  */
 package com.mycompany.ingesoft.controllers;
 
-import com.mycompany.ingesoft.controllers.clases.singleton;
 import com.mycompany.ingesoft.dao.ClaseDAO;
 import com.mycompany.ingesoft.dao.Conexion;
+import com.mycompany.ingesoft.models.TipoRecurso;
+import com.mycompany.ingesoft.controllers.clases.singleton;
 import com.mycompany.ingesoft.interfaces.ModalListener;
-import com.mycompany.ingesoft.models.Empresa;
 import java.io.IOException;
-
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -42,15 +41,14 @@ import javafx.stage.Stage;
  *
  * @author natha
  */
-public class GestionarEmpresaController implements Initializable {
+public class GestionarRecursoController implements Initializable {
 
     @FXML
     private VBox contenedorVbox;
     
-    private Conexion conexion = new Conexion();
+    private Conexion conexion = new Conexion(); 
     private ClaseDAO dao = new ClaseDAO(conexion.getCon()); 
-    private List<Empresa> empresas = new ArrayList(); 
-    
+    private List<TipoRecurso> tiposRecurso = new ArrayList(); 
     
     private ModalListener listener;
 
@@ -58,42 +56,37 @@ public class GestionarEmpresaController implements Initializable {
         this.listener = listener;
     }
     
+    private void recargarTiposRecurso() throws SQLException{
+        tiposRecurso.clear();
+        tiposRecurso.addAll(dao.obtenerTiposDeRecurso()); 
+        cargarTiposRecurso();
+    }
+    
+    /**
+     * Initializes the controller class.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            empresas.addAll(dao.obtenerEmpresas());
-            cargarEmpresas();
+            tiposRecurso.addAll(dao.obtenerTiposDeRecurso());
+            cargarTiposRecurso();
         } catch (SQLException ex) {
-            Logger.getLogger(GestionarEmpresaController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestionarRecursoController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        recargarEmpresas();
     }    
     
-     
-    
-    private void recargarEmpresas() {
-        try {
-            empresas.clear();
-            empresas.addAll(dao.obtenerEmpresas());
-            cargarEmpresas();
-        } catch (SQLException ex) {
-            Logger.getLogger(GestionarEmpresaController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private void cargarEmpresas() {
+    private void cargarTiposRecurso() {
         contenedorVbox.getChildren().clear();
         contenedorVbox.setSpacing(10);
         
-        for (Empresa empresa : empresas) {
-            HBox empresaCard = crearTarjetaEmpresa(empresa);
-            contenedorVbox.getChildren().add(empresaCard);
+        for (TipoRecurso tipo : tiposRecurso) {
+            HBox tipoCard = crearTarjetaTipoRecurso(tipo);
+            contenedorVbox.getChildren().add(tipoCard);
         }
     }
     
-    
-    
-    private HBox crearTarjetaEmpresa(Empresa empresa) {
+    private HBox crearTarjetaTipoRecurso(TipoRecurso tipo) {
+        // Contenedor principal de la tarjeta
         HBox cardContainer = new HBox();
         cardContainer.getStyleClass().add("card-container");
         cardContainer.setAlignment(Pos.CENTER_LEFT);
@@ -101,84 +94,56 @@ public class GestionarEmpresaController implements Initializable {
         cardContainer.setPadding(new Insets(15));
         cardContainer.setStyle("-fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);");
         
-        VBox nombreContainer = new VBox();
-        nombreContainer.setAlignment(Pos.CENTER_LEFT);
-        Label nombreLabel = new Label(empresa.getDescripcion());
-        nombreLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333;");
-        nombreContainer.getChildren().add(nombreLabel);
+        // Descripción del tipo de recurso
+        Label descripcionLabel = new Label(tipo.getDescripcion());
+        descripcionLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333;");
         
+        // Espacio flexible
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         
+        // Contenedor para los botones de acción
         HBox accionesContainer = new HBox();
         accionesContainer.setAlignment(Pos.CENTER_RIGHT);
         accionesContainer.setSpacing(10);
         
+        // Botón de editar (lápiz azul)
         StackPane editarBtn = crearBotonIcono("M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z", "#2196F3");
         editarBtn.setOnMouseClicked((MouseEvent event) -> {
-            singleton.getInstancia().setId_empresa(empresa.getIdEmpresa());
-            singleton.getInstancia().setNombreEmpresa(empresa.getDescripcion());
+            singleton.getInstancia().setTipo(tipo);
             singleton.getInstancia().setEditado(true);
-            abrirVentana("nuevaEmpresa", "Editar nombre de empresa", () ->{
+            
+            abrirVentana("nuevoRecurso", "Editar Tipo de Recurso", () -> {
                 try {
-                        actualizarEmpresas();
+                    recargarTiposRecurso();
                 } catch (SQLException ex) {
-                        Logger.getLogger(GestionarEmpresaController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(GestionarRecursoController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             });
-            
-            // lógica de edición
         });
         
+        // Botón de eliminar (papelera roja)
         StackPane eliminarBtn = crearBotonIcono("M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z", "#F44336");
         eliminarBtn.setOnMouseClicked((MouseEvent event) -> {
-            singleton.getInstancia().setId_empresa(empresa.getIdEmpresa());
-            singleton.getInstancia().setNombreEmpresa(empresa.getDescripcion());
-
-            abrirVentana("eliminarEmpresa", "Eliminación de empresa", () -> {
+            singleton.getInstancia().setTipo(tipo);
+            
+            abrirVentana("eliminarTipoRecurso", "Eliminar Tipo de Recurso", () -> {
                 try {
-                    actualizarEmpresas();
+                    recargarTiposRecurso();
                 } catch (SQLException ex) {
-                    Logger.getLogger(GestionarEmpresaController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(GestionarRecursoController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             });
         });
         
         accionesContainer.getChildren().addAll(editarBtn, eliminarBtn);
-        cardContainer.getChildren().addAll(nombreContainer, spacer, accionesContainer);
+        
+        // Agregar todos los elementos al contenedor principal
+        cardContainer.getChildren().addAll(descripcionLabel, spacer, accionesContainer);
+        
         return cardContainer;
     }
-    private void actualizarEmpresas() throws SQLException{
-        empresas = dao.obtenerEmpresas(); 
-        cargarEmpresas();
-        
-    }
-
-    private void abrirVentana(String fxmlFileName, String titulo, ModalListener listener) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                    "/com/mycompany/ingesoft/fxml/" + fxmlFileName + ".fxml"
-            ));
-            Parent root = loader.load();
-
-            Object controller = loader.getController();
-                if (controller instanceof EliminarEmpresaController) {
-                    ((EliminarEmpresaController) controller).setListener(listener);
-                } else if (controller instanceof NuevaEmpresaController) {
-                    ((NuevaEmpresaController) controller).setListener(listener);
-                }
-
-            Stage stage = new Stage();
-            stage.setTitle(titulo);
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
-
-        } catch (IOException ex) {
-            Logger.getLogger(GestionarEmpresaController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
+    
     private StackPane crearBotonIcono(String svgPath, String color) {
         StackPane buttonContainer = new StackPane();
         buttonContainer.setPrefSize(40, 40);
@@ -202,5 +167,32 @@ public class GestionarEmpresaController implements Initializable {
         });
         
         return buttonContainer;
+    }
+    
+    private void abrirVentana(String fxmlFileName, String titulo, ModalListener listener) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/com/mycompany/ingesoft/fxml/" + fxmlFileName + ".fxml"
+            ));
+            Parent root = loader.load();
+
+            Object controller = loader.getController();
+            // Aquí puedes agregar lógica para pasar el listener a los controladores específicos
+            // Por ejemplo, si creas EliminarRecursoController o DetalleRecursoController
+
+            Stage stage = new Stage();
+            stage.setTitle(titulo);
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+            
+            // Ejecutar el listener después de cerrar la ventana
+            if (listener != null) {
+                listener.onDataChanged();
+            }
+
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarRecursoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

@@ -13,6 +13,16 @@ public class Empresa {
         this.idEmpresa = idEmpresa;
     }
 
+    public Empresa() {
+    }
+
+    
+    
+    public Empresa(int idEmpresa, String descripcion) {
+        this.idEmpresa = idEmpresa;
+        this.descripcion = descripcion;
+    }
+
     public String getDescripcion() {
         return descripcion;
     }

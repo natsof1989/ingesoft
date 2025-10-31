@@ -27,6 +27,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -60,6 +61,9 @@ public class EliminarEmpresaController implements Initializable {
     private Conexion conexion = new Conexion(); 
     private ClaseDAO dao = new ClaseDAO(conexion.getCon()); 
     private ModalListener listener;
+    @FXML
+    private Label txt_nameEmpresa;
+    
 
     public void setListener(ModalListener listener) {
         this.listener = listener;
@@ -95,8 +99,6 @@ public class EliminarEmpresaController implements Initializable {
         ControladorUtils.cerrarModal((Node) event.getSource());
     }
      
-    @FXML
-    
     private void eliminarEmpresa(ActionEvent event) throws SQLException {
         ControladorUtils.mostrarWarning("Aviso", "Al eliminar una empresa se eliminan también todos los datos "
                 + "relacionados a esa empresa (sucursales y recursos). Esta acción no se puede deshacer. ");
@@ -122,27 +124,6 @@ public class EliminarEmpresaController implements Initializable {
         }
     }
 
-    public void mostrarWarning(String titulo, String mensaje){
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(titulo);
-        alert.setHeaderText("Aviso");  // Esto elimina el "Message" por defecto
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
-     public static boolean mostrarConfirmacion(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
+   
 
-        // Personalizar botones (opcional)
-        ButtonType buttonTypeYes = new ButtonType("Sí", ButtonBar.ButtonData.YES);
-        ButtonType buttonTypeNo = new ButtonType("No", ButtonBar.ButtonData.NO);
-        alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
-
-        // Mostrar diálogo y esperar respuesta
-        Optional<ButtonType> result = alert.showAndWait();
-        return result.isPresent() && result.get() == buttonTypeYes;
-    }
-    
 }
