@@ -204,128 +204,211 @@ public class PrimaryController implements Initializable {
     }
     
     private VBox crearTarjetaRecurso(Recurso recurso) {
-        VBox card = new VBox(10);
-        card.getStyleClass().add("resource-card");
-        card.setMaxWidth(Double.MAX_VALUE);
-        card.setMinWidth(280);
-        GridPane.setFillWidth(card, true);
+    VBox card = new VBox(10);
+    card.getStyleClass().add("resource-card");
+    card.setMaxWidth(Double.MAX_VALUE);
+    card.setMinWidth(280);
+    GridPane.setFillWidth(card, true);
 
-        // Header con título y menú
-        HBox headerBox = new HBox();
-        headerBox.setAlignment(javafx.geometry.Pos.CENTER);
+    // Header con título y menú
+    HBox headerBox = new HBox();
+    headerBox.setAlignment(javafx.geometry.Pos.CENTER);
 
-        Label lblTitulo = new Label(recurso.getTitulo());
-        lblTitulo.getStyleClass().add("card-title");
-        lblTitulo.setWrapText(true);
-        lblTitulo.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
-        HBox.setHgrow(lblTitulo, javafx.scene.layout.Priority.ALWAYS);
+    Label lblTitulo = new Label(recurso.getTitulo());
+    lblTitulo.getStyleClass().add("card-title");
+    lblTitulo.setWrapText(true);
+    lblTitulo.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
+    HBox.setHgrow(lblTitulo, javafx.scene.layout.Priority.ALWAYS);
 
-        MenuButton menuAcciones = new MenuButton("⋮");
-        menuAcciones.getStyleClass().add("menu-button-card");
-        menuAcciones.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
-        HBox contenedor = new HBox(menuAcciones);
-        contenedor.setAlignment(Pos.CENTER_LEFT);
+    MenuButton menuAcciones = new MenuButton("⋮");
+    menuAcciones.getStyleClass().add("menu-button-card");
+    menuAcciones.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
+    MenuItem itemEditar = new MenuItem("Editar");
+    itemEditar.setOnAction(e -> editarRecurso(recurso));
 
-        MenuItem itemEditar = new MenuItem("Editar");
-        itemEditar.setOnAction(e -> editarRecurso(recurso));
+    MenuItem itemEliminar = new MenuItem("Eliminar");
+    itemEliminar.setOnAction(e -> eliminarRecurso(recurso));
 
-        MenuItem itemEliminar = new MenuItem("Eliminar");
-        itemEliminar.setOnAction(e -> eliminarRecurso(recurso));
+    menuAcciones.getItems().addAll(itemEditar, itemEliminar);
+    headerBox.getChildren().addAll(lblTitulo, menuAcciones);
+    card.getChildren().add(headerBox);
 
-        menuAcciones.getItems().addAll(itemEditar, itemEliminar);
-        headerBox.getChildren().addAll(lblTitulo, menuAcciones);
-        card.getChildren().add(headerBox);
+    // Empresa y sucursal
+    HBox empresaSucursalBox = new HBox(8);
+    empresaSucursalBox.setAlignment(javafx.geometry.Pos.CENTER);
 
-        // Empresa y sucursal
-        HBox empresaSucursalBox = new HBox(8);
-        empresaSucursalBox.setAlignment(javafx.geometry.Pos.CENTER);
+    Label lblEmpresa = new Label(recurso.getNombreEmpresa() != null ? recurso.getNombreEmpresa() : "Sin empresa");
+    lblEmpresa.getStyleClass().add("card-empresa");
 
-        Label lblEmpresa = new Label(recurso.getNombreEmpresa() != null ? recurso.getNombreEmpresa() : "Sin empresa");
-        lblEmpresa.getStyleClass().add("card-empresa");
+    if (recurso.getNombreSucursal() != null && !recurso.getNombreSucursal().trim().isEmpty()) {
+        Label lblSeparador = new Label("•");
+        lblSeparador.getStyleClass().add("card-separator-text");
+        lblSeparador.setTextFill(javafx.scene.paint.Color.valueOf("#657786"));
 
-        if (recurso.getNombreSucursal() != null && !recurso.getNombreSucursal().trim().isEmpty()) {
-            Label lblSeparador = new Label("•");
-            lblSeparador.getStyleClass().add("card-separator-text");
-            lblSeparador.setTextFill(javafx.scene.paint.Color.valueOf("#657786"));
+        Label lblSucursal = new Label(recurso.getNombreSucursal());
+        lblSucursal.getStyleClass().add("card-sucursal");
 
-            Label lblSucursal = new Label(recurso.getNombreSucursal());
-            lblSucursal.getStyleClass().add("card-sucursal");
-
-            empresaSucursalBox.getChildren().addAll(lblEmpresa, lblSeparador, lblSucursal);
-        } else {
-            empresaSucursalBox.getChildren().add(lblEmpresa);
-        }
-        card.getChildren().add(empresaSucursalBox);
-
-        // Tipo de recurso
-        if (recurso.getNombreTipo() != null && !recurso.getNombreTipo().trim().isEmpty()) {
-            Label lblTipoRecurso = new Label(recurso.getNombreTipo());
-            lblTipoRecurso.getStyleClass().add("server-badge");
-            card.getChildren().add(lblTipoRecurso);
-        }
-
-        // Separador
-        Separator separator = new Separator();
-        separator.getStyleClass().add("card-separator");
-        card.getChildren().add(separator);
-
-        // 🔹 Contenido dinámico restaurado
-        VBox contentBox = new VBox(8);
-
-        // IP
-        if (recurso.getIp() != null && !recurso.getIp().trim().isEmpty()) {
-            HBox ipBox = new HBox(8);
-            ipBox.getStyleClass().add("info-row");
-            ipBox.setAlignment(javafx.geometry.Pos.CENTER);
-
-            Label lblIpIcon = new Label("🌐");
-            Label lblIp = new Label(recurso.getIp());
-            lblIp.getStyleClass().add("card-info");
-
-            Button btnCopiarIp = new Button();
-            btnCopiarIp.setGraphic(createCopyIcon());
-            btnCopiarIp.setOnAction(e -> copiarAlPortapapeles(recurso.getIp()));
-
-            ipBox.getChildren().addAll(lblIpIcon, lblIp, btnCopiarIp);
-            contentBox.getChildren().add(ipBox);
-        }
-
-        // AnyDesk
-        if (recurso.getAnydesk() != null && !recurso.getAnydesk().trim().isEmpty()) {
-            HBox anydeskBox = new HBox(8);
-            anydeskBox.getStyleClass().add("info-row");
-            anydeskBox.setAlignment(javafx.geometry.Pos.CENTER);
-
-            Label lblAnydeskIcon = new Label("🖥️");
-            Label lblAnydesk = new Label(recurso.getAnydesk());
-            lblAnydesk.getStyleClass().add("card-info");
-
-            Button btnCopiarAnydesk = new Button();
-            btnCopiarAnydesk.setGraphic(createCopyIcon());
-            btnCopiarAnydesk.setOnAction(e -> copiarAlPortapapeles(recurso.getAnydesk()));
-
-            anydeskBox.getChildren().addAll(lblAnydeskIcon, lblAnydesk, btnCopiarAnydesk);
-            contentBox.getChildren().add(anydeskBox);
-        }
-
-        // Nota
-        if (recurso.getNota() != null && !recurso.getNota().trim().isEmpty()) {
-            VBox noteBox = new VBox(4);
-            noteBox.getStyleClass().add("note-box");
-
-            Label lblNoteIcon = new Label("📝");
-            Label lblNota = new Label(recurso.getNota());
-            lblNota.setWrapText(true);
-
-            noteBox.getChildren().addAll(lblNoteIcon, lblNota);
-            contentBox.getChildren().add(noteBox);
-        }
-
-        card.getChildren().add(contentBox);
-
-        return card;
+        empresaSucursalBox.getChildren().addAll(lblEmpresa, lblSeparador, lblSucursal);
+    } else {
+        empresaSucursalBox.getChildren().add(lblEmpresa);
     }
+    card.getChildren().add(empresaSucursalBox);
+
+    // Tipo de recurso
+    if (recurso.getNombreTipo() != null && !recurso.getNombreTipo().trim().isEmpty()) {
+        Label lblTipoRecurso = new Label(recurso.getNombreTipo());
+        lblTipoRecurso.getStyleClass().add("server-badge");
+        card.getChildren().add(lblTipoRecurso);
+    }
+
+    // Separador
+    Separator separator = new Separator();
+    separator.getStyleClass().add("card-separator");
+    card.getChildren().add(separator);
+
+    // Contenido dinámico
+    VBox contentBox = new VBox(8);
+
+    // IP
+    if (recurso.getIp() != null && !recurso.getIp().trim().isEmpty()) {
+        HBox ipBox = new HBox(8);
+        ipBox.getStyleClass().add("info-row");
+        ipBox.setAlignment(javafx.geometry.Pos.CENTER);
+
+        Label lblIpIcon = new Label("🌐");
+        Label lblIp = new Label(recurso.getIp());
+        lblIp.getStyleClass().add("card-info");
+
+        Button btnCopiarIp = new Button();
+        btnCopiarIp.setGraphic(createCopyIcon());
+        btnCopiarIp.setOnAction(e -> copiarAlPortapapeles(recurso.getIp()));
+
+        ipBox.getChildren().addAll(lblIpIcon, lblIp, btnCopiarIp);
+        contentBox.getChildren().add(ipBox);
+    }
+
+    // AnyDesk
+    if (recurso.getAnydesk() != null && !recurso.getAnydesk().trim().isEmpty()) {
+        HBox anydeskBox = new HBox(8);
+        anydeskBox.getStyleClass().add("info-row");
+        anydeskBox.setAlignment(javafx.geometry.Pos.CENTER);
+
+        Label lblAnydeskIcon = new Label("🖥️");
+        Label lblAnydesk = new Label(recurso.getAnydesk());
+        lblAnydesk.getStyleClass().add("card-info");
+
+        Button btnCopiarAnydesk = new Button();
+        btnCopiarAnydesk.setGraphic(createCopyIcon());
+        btnCopiarAnydesk.setOnAction(e -> copiarAlPortapapeles(recurso.getAnydesk()));
+
+        anydeskBox.getChildren().addAll(lblAnydeskIcon, lblAnydesk, btnCopiarAnydesk);
+        contentBox.getChildren().add(anydeskBox);
+    }
+
+    // Nota
+    if (recurso.getNota() != null && !recurso.getNota().trim().isEmpty()) {
+        VBox noteBox = new VBox(4);
+        noteBox.getStyleClass().add("note-box");
+
+        Label lblNoteIcon = new Label("📝");
+        Label lblNota = new Label(recurso.getNota());
+        lblNota.setWrapText(true);
+
+        noteBox.getChildren().addAll(lblNoteIcon, lblNota);
+        contentBox.getChildren().add(noteBox);
+    }
+
+    card.getChildren().add(contentBox);
+
+    // Sección colapsable de credenciales (solo si hay usuario)
+    if (recurso.isInicioSesion() && recurso.getUsuario() != null && !recurso.getUsuario().trim().isEmpty()) {
+        VBox credSection = new VBox(0);
+        credSection.getStyleClass().add("credentials-section");
+
+        Button btnToggleCred = new Button("🔐 Ver Credenciales de Acceso");
+        btnToggleCred.getStyleClass().add("toggle-credentials-button");
+        btnToggleCred.setMaxWidth(Double.MAX_VALUE);
+
+        VBox credBox = new VBox(10);
+        credBox.setId("credBox"); // ID para lookup
+        credBox.getStyleClass().add("credentials-container");
+        credBox.setManaged(false);
+        credBox.setVisible(false);
+
+        // Usuario
+        HBox usuarioBox = new HBox(10);
+        usuarioBox.getStyleClass().add("credential-row");
+        usuarioBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+        VBox userLabelBox = new VBox(2);
+        Label lblUserLabel = new Label("USUARIO");
+        lblUserLabel.getStyleClass().add("credential-label");
+
+        Label lblUserIcon = new Label("👤");
+        lblUserIcon.getStyleClass().add("credential-icon");
+        userLabelBox.getChildren().addAll(lblUserLabel, lblUserIcon);
+
+        Label lblUsuario = new Label(recurso.getUsuario());
+        lblUsuario.getStyleClass().add("credential-value");
+        javafx.scene.layout.HBox.setHgrow(lblUsuario, javafx.scene.layout.Priority.ALWAYS);
+
+        Button btnCopiarUsuario = new Button();
+        btnCopiarUsuario.getStyleClass().add("copy-button");
+        btnCopiarUsuario.setGraphic(createCopyIcon());
+        btnCopiarUsuario.setOnAction(e -> copiarAlPortapapeles(recurso.getUsuario()));
+        btnCopiarUsuario.setTooltip(new javafx.scene.control.Tooltip("Copiar usuario"));
+
+        usuarioBox.getChildren().addAll(userLabelBox, lblUsuario, btnCopiarUsuario);
+        credBox.getChildren().add(usuarioBox);
+
+        // Contraseña
+        if (recurso.getContrasena() != null && !recurso.getContrasena().trim().isEmpty()) {
+            HBox passwordBox = new HBox(10);
+            passwordBox.getStyleClass().add("credential-row");
+            passwordBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+            VBox passLabelBox = new VBox(2);
+            Label lblPassLabel = new Label("CONTRASEÑA");
+            lblPassLabel.getStyleClass().add("credential-label");
+
+            Label lblPassIcon = new Label("🔒");
+            lblPassIcon.getStyleClass().add("credential-icon");
+            passLabelBox.getChildren().addAll(lblPassLabel, lblPassIcon);
+
+            Label lblPassword = new Label("••••••••");
+            lblPassword.getStyleClass().add("credential-password");
+            javafx.scene.layout.HBox.setHgrow(lblPassword, javafx.scene.layout.Priority.ALWAYS);
+
+            Button btnCopiarPassword = new Button();
+            btnCopiarPassword.getStyleClass().add("copy-button");
+            btnCopiarPassword.setGraphic(createCopyIcon());
+            btnCopiarPassword.setOnAction(e -> copiarAlPortapapeles(recurso.getContrasena()));
+            btnCopiarPassword.setTooltip(new javafx.scene.control.Tooltip("Copiar contraseña"));
+
+            passwordBox.getChildren().addAll(passLabelBox, lblPassword, btnCopiarPassword);
+            credBox.getChildren().add(passwordBox);
+        }
+
+        Button btnLogin = new Button("🚀 Iniciar Sesión");
+        btnLogin.setId("btnLogin"); // ID para lookup
+        btnLogin.getStyleClass().add("login-button-credential");
+        btnLogin.setOnAction(e -> iniciarSesion(recurso));
+        btnLogin.setMaxWidth(Double.MAX_VALUE);
+        btnLogin.setManaged(false);
+        btnLogin.setVisible(false);
+
+        credSection.getChildren().addAll(btnToggleCred, credBox, btnLogin);
+
+        // Agregar listener para toggle con IDs
+        btnToggleCred.setOnAction(e -> toggleCredentials(credSection, btnToggleCred, recurso));
+
+        card.getChildren().add(credSection);
+    }
+
+    return card;
+}
+
 
     // Método mejorado para editar - AHORA USA EditTarjeta.fxml
     private void editarRecurso(Recurso recurso) {
@@ -437,29 +520,32 @@ public class PrimaryController implements Initializable {
         }
     }
 
+    
     private void toggleCredentials(VBox credSection, Button toggleButton, Recurso recurso) {
-        // Obtener los elementos hijos
-        VBox credBox = (VBox) credSection.getChildren().get(1);
-        Button loginButton = (Button) credSection.getChildren().get(2);
-        
-        if (credBox.isVisible()) {
-            // Colapsar
-            credBox.setVisible(false);
-            credBox.setManaged(false);
-            loginButton.setVisible(false);
-            loginButton.setManaged(false);
-            toggleButton.setText("🔐 Ver Credenciales de Acceso");
-            toggleButton.getStyleClass().remove("toggle-credentials-button-active");
-        } else {
-            // Desplegar
-            credBox.setVisible(true);
-            credBox.setManaged(true);
-            loginButton.setVisible(true);
-            loginButton.setManaged(true);
-            toggleButton.setText("🔒 Ocultar Credenciales de Acceso");
-            toggleButton.getStyleClass().add("toggle-credentials-button-active");
-        }
+    VBox credBox = (VBox) credSection.lookup("#credBox");
+    Button loginButton = (Button) credSection.lookup("#btnLogin");
+
+    if (credBox == null || loginButton == null) {
+        System.err.println("No se encontraron elementos credBox o btnLogin en credSection");
+        return;
     }
+    
+    if (credBox.isVisible()) {
+        credBox.setVisible(false);
+        credBox.setManaged(false);
+        loginButton.setVisible(false);
+        loginButton.setManaged(false);
+        toggleButton.setText("🔐 Ver Credenciales de Acceso");
+        toggleButton.getStyleClass().remove("toggle-credentials-button-active");
+    } else {
+        credBox.setVisible(true);
+        credBox.setManaged(true);
+        loginButton.setVisible(true);
+        loginButton.setManaged(true);
+        toggleButton.setText("🔒 Ocultar Credenciales de Acceso");
+        toggleButton.getStyleClass().add("toggle-credentials-button-active");
+    }
+}
 
     private void iniciarSesion(Recurso recurso) {
         System.out.println("Inicio de sesión en recurso: " + recurso.getTitulo());

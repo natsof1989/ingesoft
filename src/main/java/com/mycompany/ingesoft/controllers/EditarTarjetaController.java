@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package com.mycompany.ingesoft.controllers;
 
 import com.mycompany.ingesoft.controllers.clases.singleton;
@@ -31,11 +27,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-/**
- * Controller para editar recursos usando EditTarjeta.fxml
- *
- * @author Mateo
- */
 public class EditarTarjetaController implements Initializable {
 
     @FXML
@@ -74,25 +65,18 @@ public class EditarTarjetaController implements Initializable {
     private Stage stage;
     private Recurso recursoActual;
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         conexion = new Conexion();
         dao = new ClaseDAO(conexion.getCon());
         
-        // Cargar datos iniciales
         cargarEmpresas();
         cargarTiposRecurso();
         
-        // Configurar listeners
         comboEmpresas.setOnAction(this::cargarSucursalesPorEmpresa);
         
-        // Cargar datos del recurso a editar
         cargarDatosRecurso();
         
-        // Cambiar texto del botón
         btnGuardar.setText("Guardar");
     }
     
@@ -102,13 +86,11 @@ public class EditarTarjetaController implements Initializable {
             recursoActual = dao.obtenerRecursoPorId(idRecurso);
             
             if (recursoActual != null) {
-                // Cargar todos los campos
                 inputTitulo.setText(recursoActual.getTitulo());
                 inputIP.setText(recursoActual.getIp());
                 inputAnyDesk.setText(recursoActual.getAnydesk());
                 textAreaDescripcion.setText(recursoActual.getNota());
                 
-                // Cargar usuario y contraseña si existen
                 if (recursoActual.getUsuario() != null) {
                     inputUsuario.setText(recursoActual.getUsuario());
                 }
@@ -116,11 +98,9 @@ public class EditarTarjetaController implements Initializable {
                     inputPassword.setText(recursoActual.getPassword());
                 }
                 
-                // Seleccionar empresa
                 if (recursoActual.getIdEmpresa() != -1) {
                     seleccionarEmpresaPorId(recursoActual.getIdEmpresa());
                     
-                    // Cargar sucursal después de la empresa
                     if (recursoActual.getIdSucursal() != -1) {
                         javafx.application.Platform.runLater(() -> {
                             seleccionarSucursalPorId(recursoActual.getIdSucursal());
@@ -128,12 +108,10 @@ public class EditarTarjetaController implements Initializable {
                     }
                 }
                 
-                // Seleccionar tipo de recurso
                 if (recursoActual.getIdTipoRecurso() != -1) {
                     seleccionarTipoRecursoPorId(recursoActual.getIdTipoRecurso());
                 }
                 
-                // Si hay datos de sesión, mostrar checkbox
                 if (recursoActual.getUsuarioSesion() != null || recursoActual.getPasswordSesion() != null) {
                     chkInicioSesion.setSelected(true);
                     vboxCamposLogin.setVisible(true);
@@ -232,37 +210,47 @@ public class EditarTarjetaController implements Initializable {
         if (!validarCampos()) {
             return;
         }
-        // Actualizar objeto recurso con los datos del formulario
-        recursoActual.setTitulo(inputTitulo.getText().trim());
-        recursoActual.setIp(inputIP.getText().trim());
-        recursoActual.setAnydesk(inputAnyDesk.getText().trim());
-        recursoActual.setNota(textAreaDescripcion.getText().trim());
-        recursoActual.setUsuario(inputUsuario.getText().trim());
-        recursoActual.setPassword(inputPassword.getText().trim());
-        // Actualizar empresa
+
+        String titulo = inputTitulo.getText() != null ? inputTitulo.getText().trim() : "";
+        String ip = inputIP.getText() != null ? inputIP.getText().trim() : "";
+        String anydesk = inputAnyDesk.getText() != null ? inputAnyDesk.getText().trim() : "";
+        String nota = textAreaDescripcion.getText() != null ? textAreaDescripcion.getText().trim() : "";
+        String usuario = inputUsuario.getText() != null ? inputUsuario.getText().trim() : "";
+        String password = inputPassword.getText() != null ? inputPassword.getText().trim() : "";
+
+        recursoActual.setTitulo(titulo);
+        recursoActual.setIp(ip);
+        recursoActual.setAnydesk(anydesk);
+        recursoActual.setNota(nota);
+        recursoActual.setUsuario(usuario);
+        recursoActual.setPassword(password);
+
         Empresa empSel = comboEmpresas.getSelectionModel().getSelectedItem();
         if (empSel != null) {
             recursoActual.setIdEmpresa(empSel.getIdEmpresa());
         }
-        // Actualizar sucursal
+
         Sucursal sucSel = comboSucursales.getSelectionModel().getSelectedItem();
         if (sucSel != null) {
             recursoActual.setIdSucursal(sucSel.getIdSucursal());
         }
-        // Actualizar tipo de recurso
+
         TipoRecurso tipoSel = comboTipoRecurso.getSelectionModel().getSelectedItem();
         if (tipoSel != null) {
             recursoActual.setIdTipoRecurso(tipoSel.getIdTipoRecurso());
         }
-        // Actualizar datos de sesión
+
         if (chkInicioSesion.isSelected()) {
-            recursoActual.setUsuarioSesion(inputUsuarioSesion.getText().trim());
-            recursoActual.setPasswordSesion(inputPasswordSesion.getText().trim());
+            String usuarioSesion = inputUsuarioSesion.getText() != null ? inputUsuarioSesion.getText().trim() : "";
+            String passwordSesion = inputPasswordSesion.getText() != null ? inputPasswordSesion.getText().trim() : "";
+
+            recursoActual.setUsuarioSesion(usuarioSesion.isEmpty() ? null : usuarioSesion);
+            recursoActual.setPasswordSesion(passwordSesion.isEmpty() ? null : passwordSesion);
         } else {
             recursoActual.setUsuarioSesion(null);
             recursoActual.setPasswordSesion(null);
         }
-        // Guardar en base de datos
+
         boolean actualizado = dao.actualizarRecurso(recursoActual);
         if (actualizado) {
             mostrarAlertaInformacion("Éxito", "Recurso actualizado correctamente");
@@ -273,7 +261,7 @@ public class EditarTarjetaController implements Initializable {
     }
 
     private boolean validarCampos() {
-        if (inputTitulo.getText().trim().isEmpty()) {
+        if (inputTitulo.getText() == null || inputTitulo.getText().trim().isEmpty()) {
             mostrarAlertaError("Error de validación", "El título es obligatorio");
             return false;
         }
