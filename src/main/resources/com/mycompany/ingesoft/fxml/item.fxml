@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="231.0" prefWidth="231.0" spacing="10" style="-fx-border-radius: 10; -fx-background-radius: 10; -fx-background-color: #2b2b2b; -fx-border-color: #555;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.ingesoft.controllers.ItemController">
+   
+   <padding>
+      <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+   </padding>
+   
+   <children>
+      <!-- Header con título y botón -->
+      <GridPane>
+        <columnConstraints>
+          <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="40.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="ALWAYS" />
+        </rowConstraints>
+         <children>
+            <Label fx:id="lblTitulo" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;" text="Empresa" />
+            <Button mnemonicParsing="false" style="-fx-background-color: transparent;" GridPane.columnIndex="1">
+               <graphic>
+                  <ImageView fitHeight="21.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../img/editar_icono.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </children>
+      </GridPane>
+      
+      <!-- Información de conexión -->
+      <GridPane hgap="10" vgap="8">
+        <columnConstraints>
+          <ColumnConstraints hgrow="NEVER" minWidth="50" prefWidth="80" />
+          <ColumnConstraints hgrow="ALWAYS" minWidth="50" prefWidth="150" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="25" prefHeight="25" vgrow="NEVER" />
+          <RowConstraints minHeight="25" prefHeight="25" vgrow="NEVER" />
+          <RowConstraints minHeight="25" prefHeight="25" vgrow="NEVER" />
+          <RowConstraints minHeight="25" prefHeight="25" vgrow="NEVER" />
+        </rowConstraints>
+        
+        <children>
+            <Label style="-fx-text-fill: #cccccc;" text="IP:" />
+            <Text fx:id="txtIp" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: white;" text="192.168.1.1" GridPane.columnIndex="1" />
+            
+            <Label style="-fx-text-fill: #cccccc;" text="Usuario:" GridPane.rowIndex="1" />
+            <Text fx:id="txtUsuario" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: white;" text="admin" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            
+            <Label style="-fx-text-fill: #cccccc;" text="Contraseña:" GridPane.rowIndex="2" />
+            <Text fx:id="txtContrasena" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: white;" text="••••••" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            
+            <Label style="-fx-text-fill: #cccccc;" text="Anydesk:" GridPane.rowIndex="3" />
+            <Text fx:id="txtAnydesk" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: white;" text="123 456 789" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        </children>
+      </GridPane>
+      
+      <!-- TitledPane que se expandirá -->
+      <TitledPane animated="true" expanded="false" style="-fx-text-fill: white;" text="Inicio sesión">
+         <content>
+            <VBox spacing="8">
+               <padding>
+                  <Insets bottom="10.0" left="0.0" right="0.0" top="10.0" />
+               </padding>
+               <children>
+                  <Label style="-fx-text-fill: #cccccc;" text="Usuario de sesión:" />
+                  <Text fx:id="txtUsuarioSesion" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: white;" text="user123" />
+                  
+                  <Label style="-fx-text-fill: #cccccc;" text="Contraseña de sesión:" />
+                  <Text fx:id="txtContrasenaSesion" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: white;" text="••••••••" />
+               </children>
+            </VBox>
+         </content>
+      </TitledPane>
+   </children>
+   
+</VBox>
