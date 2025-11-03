@@ -29,36 +29,22 @@ import javafx.stage.Stage;
 
 public class EditarTarjetaController implements Initializable {
 
-    @FXML
-    private TextField inputTitulo;
-    @FXML
-    private ComboBox<TipoRecurso> comboTipoRecurso;
-    @FXML
-    private ComboBox<Empresa> comboEmpresas;
-    @FXML
-    private ComboBox<Sucursal> comboSucursales;
-    @FXML
-    private TextField inputIP;
-    @FXML
-    private TextField inputAnyDesk;
-    @FXML
-    private TextField inputUsuario;
-    @FXML
-    private PasswordField inputPassword;
-    @FXML
-    private CheckBox chkInicioSesion;
-    @FXML
-    private VBox vboxCamposLogin;
-    @FXML
-    private TextField inputUsuarioSesion;
-    @FXML
-    private PasswordField inputPasswordSesion;
-    @FXML
-    private TextArea textAreaDescripcion;
-    @FXML
-    private Button btnCancelar;
-    @FXML
-    private Button btnGuardar;
+    @FXML private TextField inputTitulo;
+    @FXML private ComboBox<TipoRecurso> comboTipoRecurso;
+    @FXML private ComboBox<Empresa> comboEmpresas;
+    @FXML private ComboBox<Sucursal> comboSucursales;
+    @FXML private TextField inputIP;
+    @FXML private TextField inputAnyDesk;
+    @FXML private TextField inputUsuario;
+    @FXML private PasswordField inputPassword;
+    @FXML private CheckBox chkInicioSesion;
+    @FXML private VBox vboxCamposLogin;
+    @FXML private Button btnToggleCredenciales;  // Botón toggle para sección credenciales
+    @FXML private TextField inputUsuarioSesion;
+    @FXML private PasswordField inputPasswordSesion;
+    @FXML private TextArea textAreaDescripcion;
+    @FXML private Button btnCancelar;
+    @FXML private Button btnGuardar;
 
     private ClaseDAO dao;
     private Conexion conexion;
@@ -69,67 +55,67 @@ public class EditarTarjetaController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         conexion = new Conexion();
         dao = new ClaseDAO(conexion.getCon());
-        
+
         cargarEmpresas();
         cargarTiposRecurso();
-        
         comboEmpresas.setOnAction(this::cargarSucursalesPorEmpresa);
-        
+
         cargarDatosRecurso();
-        
+
         btnGuardar.setText("Guardar");
+
+        // Asociar checkbox para mostrar/ocultar sección y sincronizar texto botón
+        chkInicioSesion.setOnAction(this::mostrarCamposLogin);
     }
-    
+
+
+
+    /** Actualiza visibilidad según selección del checkbox */
+    @FXML
+    private void mostrarCamposLogin(ActionEvent event) {
+        boolean mostrar = chkInicioSesion.isSelected();
+        vboxCamposLogin.setVisible(mostrar);
+        vboxCamposLogin.setManaged(mostrar);
+        
+    }
+
+    /** Carga datos existentes del recurso en interfaz */
     private void cargarDatosRecurso() {
         try {
             int idRecurso = singleton.getInstancia().getId_recurso();
             recursoActual = dao.obtenerRecursoPorId(idRecurso);
-            
+
             if (recursoActual != null) {
+                // Campos básicos
                 inputTitulo.setText(recursoActual.getTitulo());
                 inputIP.setText(recursoActual.getIp());
                 inputAnyDesk.setText(recursoActual.getAnydesk());
                 textAreaDescripcion.setText(recursoActual.getNota());
-                
-                if (recursoActual.getUsuario() != null) {
-                    inputUsuario.setText(recursoActual.getUsuario());
+                if (recursoActual.getUsuario() != null) inputUsuario.setText(recursoActual.getUsuario());
+                if (recursoActual.getPassword() != null) inputPassword.setText(recursoActual.getPassword());
+
+                // Selección combos
+                if (recursoActual.getIdEmpresa() != -1) seleccionarEmpresaPorId(recursoActual.getIdEmpresa());
+                if (recursoActual.getIdSucursal() != -1) {
+                    javafx.application.Platform.runLater(() -> seleccionarSucursalPorId(recursoActual.getIdSucursal())); 
                 }
-                if (recursoActual.getPassword() != null) {
-                    inputPassword.setText(recursoActual.getPassword());
-                }
+                if (recursoActual.getIdTipoRecurso() != -1) seleccionarTipoRecursoPorId(recursoActual.getIdTipoRecurso());
+
+                // Mostrar y cargar credenciales inicio sesión si existen
+                boolean tieneCredencialesSesion = (recursoActual.getUsuarioSesion() != null && !recursoActual.getUsuarioSesion().trim().isEmpty())
+                        || (recursoActual.getPasswordSesion() != null && !recursoActual.getPasswordSesion().trim().isEmpty());
+                chkInicioSesion.setSelected(tieneCredencialesSesion);
+                vboxCamposLogin.setVisible(tieneCredencialesSesion);
+                vboxCamposLogin.setManaged(tieneCredencialesSesion);
                 
-                if (recursoActual.getIdEmpresa() != -1) {
-                    seleccionarEmpresaPorId(recursoActual.getIdEmpresa());
-                    
-                    if (recursoActual.getIdSucursal() != -1) {
-                        javafx.application.Platform.runLater(() -> {
-                            seleccionarSucursalPorId(recursoActual.getIdSucursal());
-                        });
-                    }
+                if (tieneCredencialesSesion) {
+                    inputUsuarioSesion.setText(recursoActual.getUsuarioSesion());
+                    inputPasswordSesion.setText(recursoActual.getPasswordSesion());
                 }
-                
-                if (recursoActual.getIdTipoRecurso() != -1) {
-                    seleccionarTipoRecursoPorId(recursoActual.getIdTipoRecurso());
-                }
-                
-                if (recursoActual.getUsuarioSesion() != null || recursoActual.getPasswordSesion() != null) {
-                    chkInicioSesion.setSelected(true);
-                    vboxCamposLogin.setVisible(true);
-                    vboxCamposLogin.setManaged(true);
-                    
-                    if (recursoActual.getUsuarioSesion() != null) {
-                        inputUsuarioSesion.setText(recursoActual.getUsuarioSesion());
-                    }
-                    if (recursoActual.getPasswordSesion() != null) {
-                        inputPasswordSesion.setText(recursoActual.getPasswordSesion());
-                    }
-                }
-                
             } else {
                 mostrarAlertaError("Error", "No se encontró el recurso para editar");
                 cerrarVentana();
             }
-            
         } catch (SQLException ex) {
             Logger.getLogger(EditarTarjetaController.class.getName()).log(Level.SEVERE, null, ex);
             mostrarAlertaError("Error", "No se pudo cargar el recurso: " + ex.getMessage());
@@ -159,7 +145,6 @@ public class EditarTarjetaController implements Initializable {
 
     private void cargarSucursalesPorEmpresa(ActionEvent event) {
         Empresa empresaSeleccionada = comboEmpresas.getSelectionModel().getSelectedItem();
-        
         if (empresaSeleccionada != null) {
             try {
                 List<Sucursal> sucursales = dao.obtenerSucursalesPorEmpresa(empresaSeleccionada.getIdEmpresa());
@@ -197,85 +182,62 @@ public class EditarTarjetaController implements Initializable {
             }
         }
     }
-
     @FXML
-    private void mostrarCamposLogin(ActionEvent event) {
-        boolean mostrar = chkInicioSesion.isSelected();
-        vboxCamposLogin.setVisible(mostrar);
-        vboxCamposLogin.setManaged(mostrar);
+private void guardar(ActionEvent event) throws SQLException {
+    if (!validarCampos()) return;
+
+    recursoActual.setTitulo(inputTitulo.getText().trim());
+    recursoActual.setIp(inputIP.getText().trim());
+    recursoActual.setAnydesk(inputAnyDesk.getText().trim());
+
+    String descripcion = textAreaDescripcion.getText();
+    if (descripcion == null) descripcion = "";
+    recursoActual.setNota(descripcion.trim());
+
+    recursoActual.setUsuario(inputUsuario.getText().trim());
+    recursoActual.setPassword(inputPassword.getText().trim());
+
+    Empresa empSel = comboEmpresas.getSelectionModel().getSelectedItem();
+    if (empSel != null) recursoActual.setIdEmpresa(empSel.getIdEmpresa());
+
+    Sucursal sucSel = comboSucursales.getSelectionModel().getSelectedItem();
+    if (sucSel != null) recursoActual.setIdSucursal(sucSel.getIdSucursal());
+
+    TipoRecurso tipoSel = comboTipoRecurso.getSelectionModel().getSelectedItem();
+    if (tipoSel != null) recursoActual.setIdTipoRecurso(tipoSel.getIdTipoRecurso());
+
+    if (chkInicioSesion.isSelected()) {
+        String usuarioSesion = inputUsuarioSesion.getText().trim();
+        String passwordSesion = inputPasswordSesion.getText().trim();
+        recursoActual.setUsuarioSesion(usuarioSesion.isEmpty() ? null : usuarioSesion);
+        recursoActual.setPasswordSesion(passwordSesion.isEmpty() ? null : passwordSesion);
+    } else {
+        recursoActual.setUsuarioSesion(null);
+        recursoActual.setPasswordSesion(null);
     }
 
-    @FXML
-    private void guardar(ActionEvent event) throws SQLException {
-        if (!validarCampos()) {
-            return;
-        }
-
-        String titulo = inputTitulo.getText() != null ? inputTitulo.getText().trim() : "";
-        String ip = inputIP.getText() != null ? inputIP.getText().trim() : "";
-        String anydesk = inputAnyDesk.getText() != null ? inputAnyDesk.getText().trim() : "";
-        String nota = textAreaDescripcion.getText() != null ? textAreaDescripcion.getText().trim() : "";
-        String usuario = inputUsuario.getText() != null ? inputUsuario.getText().trim() : "";
-        String password = inputPassword.getText() != null ? inputPassword.getText().trim() : "";
-
-        recursoActual.setTitulo(titulo);
-        recursoActual.setIp(ip);
-        recursoActual.setAnydesk(anydesk);
-        recursoActual.setNota(nota);
-        recursoActual.setUsuario(usuario);
-        recursoActual.setPassword(password);
-
-        Empresa empSel = comboEmpresas.getSelectionModel().getSelectedItem();
-        if (empSel != null) {
-            recursoActual.setIdEmpresa(empSel.getIdEmpresa());
-        }
-
-        Sucursal sucSel = comboSucursales.getSelectionModel().getSelectedItem();
-        if (sucSel != null) {
-            recursoActual.setIdSucursal(sucSel.getIdSucursal());
-        }
-
-        TipoRecurso tipoSel = comboTipoRecurso.getSelectionModel().getSelectedItem();
-        if (tipoSel != null) {
-            recursoActual.setIdTipoRecurso(tipoSel.getIdTipoRecurso());
-        }
-
-        if (chkInicioSesion.isSelected()) {
-            String usuarioSesion = inputUsuarioSesion.getText() != null ? inputUsuarioSesion.getText().trim() : "";
-            String passwordSesion = inputPasswordSesion.getText() != null ? inputPasswordSesion.getText().trim() : "";
-
-            recursoActual.setUsuarioSesion(usuarioSesion.isEmpty() ? null : usuarioSesion);
-            recursoActual.setPasswordSesion(passwordSesion.isEmpty() ? null : passwordSesion);
-        } else {
-            recursoActual.setUsuarioSesion(null);
-            recursoActual.setPasswordSesion(null);
-        }
-
-        boolean actualizado = dao.actualizarRecurso(recursoActual);
-        if (actualizado) {
-            mostrarAlertaInformacion("Éxito", "Recurso actualizado correctamente");
-            cerrarVentana();
-        } else {
-            mostrarAlertaError("Error", "No se pudo actualizar el recurso");
-        }
+    boolean actualizado = dao.actualizarRecurso(recursoActual);
+    if (actualizado) {
+        mostrarAlertaInformacion("Éxito", "Recurso actualizado correctamente");
+        Stage stage = (Stage) btnGuardar.getScene().getWindow();
+        stage.close();
+    } else {
+        mostrarAlertaError("Error", "No se pudo actualizar el recurso");
     }
-
+}
     private boolean validarCampos() {
         if (inputTitulo.getText() == null || inputTitulo.getText().trim().isEmpty()) {
             mostrarAlertaError("Error de validación", "El título es obligatorio");
             return false;
         }
-
         if (comboTipoRecurso.getSelectionModel().getSelectedItem() == null) {
             mostrarAlertaError("Error de validación", "Debe seleccionar un tipo de recurso");
             return false;
         }
-
         if (comboEmpresas.getSelectionModel().getSelectedItem() == null) {
             mostrarAlertaError("Error de validación", "Debe seleccionar una empresa");
             return false;
         }
-
         return true;
     }
 
@@ -285,9 +247,7 @@ public class EditarTarjetaController implements Initializable {
     }
 
     private void cerrarVentana() {
-        if (stage != null) {
-            stage.close();
-        }
+        if (stage != null) stage.close();
     }
 
     public void setStage(Stage stage) {

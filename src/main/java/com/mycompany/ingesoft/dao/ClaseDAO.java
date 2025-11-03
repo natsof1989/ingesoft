@@ -16,8 +16,7 @@ public class ClaseDAO {
     public ClaseDAO(Connection conexion) {
         this.conexion = conexion;
     }
-
-    // ================== EMPRESAS ==================
+    
     public List<Empresa> obtenerEmpresas() throws SQLException {
         List<Empresa> empresas = new ArrayList<>();
         String sql = "SELECT * FROM empresa ORDER BY descripcion";
@@ -374,27 +373,30 @@ public class ClaseDAO {
     }
 
     // ================== MÉTODO AUXILIAR ==================
-    private Recurso mapRecurso(ResultSet rs) throws SQLException {
-        Recurso r = new Recurso();
-        r.setIdRecurso(rs.getInt("id_recurso"));
-        r.setIdEmpresa(rs.getInt("id_empresa"));
-        r.setIdSucursal((Integer) rs.getObject("id_sucursal"));
-        r.setIdTipoRecurso(rs.getInt("id_tipo_recurso"));
-        r.setTitulo(rs.getString("titulo"));
-        r.setUsuario(rs.getString("usuario"));
-        r.setContrasena(rs.getString("contrasena"));
-        r.setIp(rs.getString("ip"));
-        r.setNota(rs.getString("nota"));
-        r.setInicioSesion(rs.getBoolean("inicio_sesion"));
-        r.setAnydesk(rs.getString("anydesk"));
-        r.setNombreEmpresa(rs.getString("empresa_desc"));
-        r.setNombreSucursal(rs.getString("sucursal_desc"));
-        r.setNombreTipoRecurso(rs.getString("tipo_desc"));
-        r.setUsuarioSesion(null);
-        r.setPasswordSesion(null);
-    
-        return r;
-    }
+private Recurso mapRecurso(ResultSet rs) throws SQLException {
+    Recurso r = new Recurso();
+    r.setIdRecurso(rs.getInt("id_recurso"));
+    r.setIdEmpresa(rs.getInt("id_empresa"));
+    r.setIdSucursal((Integer) rs.getObject("id_sucursal"));
+    r.setIdTipoRecurso(rs.getInt("id_tipo_recurso"));
+    r.setTitulo(rs.getString("titulo"));
+    r.setUsuario(rs.getString("usuario"));
+    r.setContrasena(rs.getString("contrasena"));
+    r.setIp(rs.getString("ip"));
+    r.setNota(rs.getString("nota"));
+    r.setInicioSesion(rs.getBoolean("inicio_sesion"));
+    r.setAnydesk(rs.getString("anydesk"));
+    r.setNombreEmpresa(rs.getString("empresa_desc"));
+    r.setNombreSucursal(rs.getString("sucursal_desc"));
+    r.setNombreTipoRecurso(rs.getString("tipo_desc"));
+
+    // Agregar lectura de usuarioSesion y passwordSesion
+    r.setUsuarioSesion(rs.getString("usuario_sesion"));
+    r.setPasswordSesion(rs.getString("password_sesion"));
+
+    return r;
+}
+
 
     // ================== TIPOS DE RECURSO POR SUCURSAL ==================
     public List<TipoRecurso> obtenerTiposRecursoPorSucursal(int idSucursal) throws SQLException {

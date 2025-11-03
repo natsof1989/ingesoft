@@ -41,6 +41,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.Separator;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.Priority;
+import javafx.scene.paint.Color;
 
 /**
  * Controlador principal - Gestor de Recursos
@@ -210,7 +213,9 @@ public class PrimaryController implements Initializable {
         layoutCards(cards);
     }
     
-    private VBox crearTarjetaRecurso(Recurso recurso) {
+// ... imports y declaración de la clase
+
+private VBox crearTarjetaRecurso(Recurso recurso) {
     VBox card = new VBox(10);
     card.getStyleClass().add("resource-card");
     card.setMaxWidth(Double.MAX_VALUE);
@@ -225,7 +230,7 @@ public class PrimaryController implements Initializable {
     lblTitulo.getStyleClass().add("card-title");
     lblTitulo.setWrapText(true);
     lblTitulo.setAlignment(Pos.CENTER_RIGHT);
-    HBox.setHgrow(lblTitulo, javafx.scene.layout.Priority.ALWAYS);
+    HBox.setHgrow(lblTitulo, Priority.ALWAYS);
 
     MenuButton menuAcciones = new MenuButton("⋮");
     menuAcciones.getStyleClass().add("menu-button-card");
@@ -233,7 +238,7 @@ public class PrimaryController implements Initializable {
 
     MenuItem itemEditar = new MenuItem("Editar");
     itemEditar.setOnAction(e -> editarRecurso(recurso));
-    
+
     MenuItem itemEliminar = new MenuItem("Eliminar");
     itemEliminar.setOnAction(e -> eliminarRecurso(recurso));
 
@@ -252,7 +257,7 @@ public class PrimaryController implements Initializable {
     if (recurso.getNombreSucursal() != null && !recurso.getNombreSucursal().trim().isEmpty()) {
         Label lblSeparador = new Label("•");
         lblSeparador.getStyleClass().add("card-separator-text");
-        lblSeparador.setTextFill(javafx.scene.paint.Color.valueOf("#657786"));
+        lblSeparador.setTextFill(Color.valueOf("#657786"));
 
         Label lblSucursal = new Label(recurso.getNombreSucursal());
         lblSucursal.getStyleClass().add("card-sucursal");
@@ -329,22 +334,25 @@ public class PrimaryController implements Initializable {
 
     card.getChildren().add(contentBox);
 
-    // Sección colapsable de credenciales (solo si hay usuario)
-    if (recurso.isInicioSesion() && recurso.getUsuario() != null && !recurso.getUsuario().trim().isEmpty()) {
-        VBox credSection = new VBox(0);
-        credSection.getStyleClass().add("credentials-section");
+    // Sección colapsable de credenciales
+    VBox credSection = new VBox(0);
+    credSection.getStyleClass().add("credentials-section");
 
-        Button btnToggleCred = new Button("🔐 Ver Credenciales de Acceso");
-        btnToggleCred.getStyleClass().add("toggle-credentials-button");
-        btnToggleCred.setMaxWidth(Double.MAX_VALUE);
+    Button btnToggleCred = new Button("🔐 Ver Credenciales de Acceso");
+    btnToggleCred.getStyleClass().add("toggle-credentials-button");
+    btnToggleCred.setMaxWidth(Double.MAX_VALUE);
+    btnToggleCred.setDisable(false); // Asegurar está habilitado
 
-        VBox credBox = new VBox(10);
-        credBox.setId("credBox"); // ID para lookup
-        credBox.getStyleClass().add("credentials-container");
-        credBox.setManaged(false);
-        credBox.setVisible(false);
+    VBox credBox = new VBox(10);
+    credBox.setId("credBox");
+    credBox.getStyleClass().add("credentials-container");
+    credBox.setManaged(false);
+    credBox.setVisible(false);
 
-        // Usuario
+    boolean mostrarCredenciales = recurso.isInicioSesion() && recurso.getUsuario() != null && !recurso.getUsuario().trim().isEmpty();
+
+    if (mostrarCredenciales) {
+        // Construcción usuario y contraseña igual que antes
         HBox usuarioBox = new HBox(10);
         usuarioBox.getStyleClass().add("credential-row");
         usuarioBox.setAlignment(Pos.CENTER_LEFT);
@@ -359,18 +367,17 @@ public class PrimaryController implements Initializable {
 
         Label lblUsuario = new Label(recurso.getUsuario());
         lblUsuario.getStyleClass().add("credential-value");
-        HBox.setHgrow(lblUsuario, javafx.scene.layout.Priority.ALWAYS);
+        HBox.setHgrow(lblUsuario, Priority.ALWAYS);
 
         Button btnCopiarUsuario = new Button();
         btnCopiarUsuario.getStyleClass().add("copy-button");
         btnCopiarUsuario.setGraphic(createCopyIcon());
         btnCopiarUsuario.setOnAction(e -> copiarAlPortapapeles(recurso.getUsuario()));
-        btnCopiarUsuario.setTooltip(new javafx.scene.control.Tooltip("Copiar usuario"));
+        btnCopiarUsuario.setTooltip(new Tooltip("Copiar usuario"));
 
         usuarioBox.getChildren().addAll(userLabelBox, lblUsuario, btnCopiarUsuario);
         credBox.getChildren().add(usuarioBox);
 
-        // Contraseña
         if (recurso.getContrasena() != null && !recurso.getContrasena().trim().isEmpty()) {
             HBox passwordBox = new HBox(10);
             passwordBox.getStyleClass().add("credential-row");
@@ -386,33 +393,31 @@ public class PrimaryController implements Initializable {
 
             Label lblPassword = new Label("••••••••");
             lblPassword.getStyleClass().add("credential-password");
-            HBox.setHgrow(lblPassword, javafx.scene.layout.Priority.ALWAYS);
+            HBox.setHgrow(lblPassword, Priority.ALWAYS);
 
             Button btnCopiarPassword = new Button();
             btnCopiarPassword.getStyleClass().add("copy-button");
             btnCopiarPassword.setGraphic(createCopyIcon());
             btnCopiarPassword.setOnAction(e -> copiarAlPortapapeles(recurso.getContrasena()));
-            btnCopiarPassword.setTooltip(new javafx.scene.control.Tooltip("Copiar contraseña"));
+            btnCopiarPassword.setTooltip(new Tooltip("Copiar contraseña"));
 
             passwordBox.getChildren().addAll(passLabelBox, lblPassword, btnCopiarPassword);
             credBox.getChildren().add(passwordBox);
         }
-
-        Button btnLogin = new Button("🚀 Iniciar Sesión");
-        btnLogin.setId("btnLogin"); // ID para lookup
-        btnLogin.getStyleClass().add("login-button-credential");
-        btnLogin.setOnAction(e -> iniciarSesion(recurso));
-        btnLogin.setMaxWidth(Double.MAX_VALUE);
-        btnLogin.setManaged(false);
-        btnLogin.setVisible(false);
-
-        credSection.getChildren().addAll(btnToggleCred, credBox, btnLogin);
-
-        // Agregar listener para toggle con IDs
-        btnToggleCred.setOnAction(e -> toggleCredentials(credSection, btnToggleCred, recurso));
-
-        card.getChildren().add(credSection);
+    } else {
+        btnToggleCred.setDisable(false);
     }
+
+    btnToggleCred.setOnAction(e -> {
+        boolean visible = credBox.isVisible();
+        credBox.setVisible(!visible);
+        credBox.setManaged(!visible);
+        btnToggleCred.setText(visible ? "🔐 Ver Credenciales de Acceso" : "🔒 Ocultar Credenciales de Acceso");
+        credBox.requestLayout(); // Forzar actualización layout
+    });
+
+    credSection.getChildren().addAll(btnToggleCred, credBox);
+    card.getChildren().add(credSection);
 
     return card;
 }
@@ -464,30 +469,31 @@ public class PrimaryController implements Initializable {
     }
 
     // Método para abrir ventana de edición (ahora usa nuevaNota.fxml)
-    private void abrirVentanaEdicion(String fxmlFileName, String titulo) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                    "/com/mycompany/ingesoft/fxml/" + fxmlFileName + ".fxml"
-            ));
-            Parent root = loader.load();
+ private void abrirVentanaEdicion(String fxmlFileName, String titulo) {
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                "/com/mycompany/ingesoft/fxml/EditarTarjeta.fxml"
 
-            Stage stage = new Stage();
-            stage.setTitle(titulo);
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            
-            // Configurar para que se actualice al cerrar
-            stage.setOnHidden(event -> {
-                recargarRecursosConFiltrosActuales();
-            });
-            
-            stage.showAndWait();
-            
-        } catch (IOException ex) {
-            Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
-            mostrarAlertaError("Error", "No se pudo abrir la ventana de edición");
-        }
+        ));
+        Parent root = loader.load();
+        EditarTarjetaController controller = loader.getController();
+
+        Stage stage = new Stage();
+        stage.setTitle(titulo);
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        // Configurar para que se actualicen los recursos tras cerrar la ventana
+        stage.setOnHidden(event -> recargarRecursosConFiltrosActuales());
+
+        stage.showAndWait();
+
+    } catch (IOException ex) {
+        Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
+        mostrarAlertaError("Error", "No se pudo abrir la ventana de edición: " + ex.getMessage());
     }
+}
+
 
     // Recargar manteniendo los filtros actuales
     private void recargarRecursosConFiltrosActuales() {
@@ -528,7 +534,6 @@ public class PrimaryController implements Initializable {
         }
     }
 
-    
     private void toggleCredentials(VBox credSection, Button toggleButton, Recurso recurso) {
     VBox credBox = (VBox) credSection.lookup("#credBox");
     Button loginButton = (Button) credSection.lookup("#btnLogin");

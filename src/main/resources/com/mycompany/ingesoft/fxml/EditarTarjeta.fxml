@@ -43,7 +43,6 @@
                   <Label styleClass="form-label" text="Empresa *" />
                   <ComboBox fx:id="comboEmpresas" promptText="Selecciona empresa" styleClass="form-input" />
                </children>
-               
             </VBox>
             <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
@@ -75,12 +74,15 @@
                   <PasswordField fx:id="inputPassword" promptText="Contraseña" styleClass="form-input" />
                </children>
             </VBox>
-            <CheckBox fx:id="chkInicioSesion" onAction="#mostrarCamposLogin" text="Inicio de sesión" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="4">
+
+            <!-- Aquí añadimos el botón toggle credenciales -->
+            <CheckBox fx:id="chkInicioSesion" onAction="#mostrarCamposLogin" text="Inicio de sesión" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="5">
                <GridPane.margin>
                   <Insets top="20.0" />
                </GridPane.margin>
             </CheckBox>
-            <VBox fx:id="vboxCamposLogin" managed="false" spacing="10.0" visible="false" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="5">
+
+            <VBox fx:id="vboxCamposLogin" managed="false" spacing="10.0" visible="false" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="6">
                <children>
                   <GridPane hgap="15.0" vgap="12.0">
                      <columnConstraints>
@@ -101,14 +103,13 @@
                            </children>
                         </VBox>
                      </children>
-                     <rowConstraints>
-                        <RowConstraints />
-                     </rowConstraints>
                   </GridPane>
                </children>
             </VBox>
          </children>
          <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
             <RowConstraints />
             <RowConstraints />
             <RowConstraints />
@@ -133,3 +134,4 @@
       </HBox>
    </children>
 </VBox>
+
