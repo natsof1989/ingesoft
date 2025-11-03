@@ -62,7 +62,7 @@
       </VBox>
    </top>
    <center>
-      <ScrollPane fitToWidth="true" prefHeight="400.0" prefWidth="880.0" BorderPane.alignment="CENTER">
+      <ScrollPane fitToWidth="true" prefHeight="400.0" BorderPane.alignment="CENTER">
          <content>
             <!-- Using GridPane instead of FlowPane for responsive grid -->
             <GridPane fx:id="contenedor_gridpane" hgap="15.0" styleClass="grid-container" vgap="15.0">

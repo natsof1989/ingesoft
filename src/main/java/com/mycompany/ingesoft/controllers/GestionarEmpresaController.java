@@ -10,7 +10,6 @@ import com.mycompany.ingesoft.dao.Conexion;
 import com.mycompany.ingesoft.interfaces.ModalListener;
 import com.mycompany.ingesoft.models.Empresa;
 import java.io.IOException;
-
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
